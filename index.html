@@ -569,7 +569,53 @@ footer a:hover{text-decoration:underline}
         GameNN 为 3A 游戏 NPC 的智能决策提供了高性价比的技术路径——
         训练成本集中在 GPU 集群，推理时仅需 CPU 单核 0.3ms。
       </p>
-      <div class="keywords">
+      <p style="margin-top:.8rem">
+        <strong>多领域应用场景：</strong>GameNN 的领域无关设计使其可无缝迁移至广泛场景。
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
+        <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+          <strong style="color:var(--cyan)">网络安全 (Cybersecurity)</strong>
+          <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
+            MuLun-Mind / MuLun-Waf 已经验证了实际落地。
+            StateEncoder 将安全态势报告编码为结构化状态，
+            RNN 带状态追踪攻击链，
+            策略头高层指挥应急响应，
+            世界模型预测攻击扩散路径。
+            将复杂的安全运维决策从“人工定义规则”
+            升级为“数据驱动的智能决策”。
+          </p>
+        </div>
+        <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+          <strong style="color:var(--orange)">量化交易 (Quantitative Trading)</strong>
+          <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
+            市场数据→ StateEncoder 编码为状态（34+ 维）。
+            RNNStep 记忆历史价格脞步。
+            策略头分层：攻击型 / 对冲型 / 保守型。
+            世界模型预测短期价格波动。
+            Fuser 输出交易信号，可嵌入交易系统作为侧枝决策模块。
+            54K 参数意味着毫秒级延迟，适合高频交易场景。
+          </p>
+        </div>
+        <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+          <strong style="color:var(--green)">自动驾驶 (Autonomous Driving)</strong>
+          <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
+            传感器融合→ StateEncoder 编码为状态。
+            策略头三层：正常行驶 / 警惕 / 紧急。
+            世界模型预测周围车辆轨迹。
+            0.3ms CPU 推理适合车载部署。
+          </p>
+        </div>
+        <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+          <strong style="color:var(--purple)">医疗诊断 (Medical Diagnosis)</strong>
+          <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
+            患者数据→ StateEncoder 状态编码。
+            RNN 追踪病程演变。
+            策略头分级：常规检查 / 专科诊断 / 紧急处置。
+            世界模型预测治疗结局。
+            可作为侧枝模块助力医生决策。
+          </p>
+        </div>
+      </div>
         <span class="kw">博弈决策架构</span>
         <span class="kw">分层强化学习</span>
         <span class="kw">世界模型</span>
