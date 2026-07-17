@@ -516,8 +516,8 @@ footer a:hover{text-decoration:underline}
         <p>将 MiniMind 语言模型 (64M) 与 Game-NN 决策核心融合。语言路径将自然语言安全报告编码为 16 维结构化状态，决策路径做分层策略推理，世界模型预测动作后果，MiniMind 反思后生成可读建议。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/Game-nn-O" target="_blank">查看仓库 →</a>
-          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER_CN.md" class="paper-link">论文 ZH</a>
-          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER.md" class="paper-link">论文 EN</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/master/PAPER_CN.md" class="paper-link">论文 ZH</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/master/PAPER.md" class="paper-link">论文 EN</a>
         </div>
       </div>
 
@@ -530,8 +530,8 @@ footer a:hover{text-decoration:underline}
         <p>从 Game-nn-O 中提取核心通用回路，定义为五个可组合模块：StateEncoder → RNNDecisionStep → ActionValueHead → WorldModelStep → Fuser。通过 GameNNConfig 配置策略/动作空间和维度。~952K 参数，CPU 单步 ~0.3ms。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/GameNN-WorldModel" target="_blank">查看仓库 →</a>
-          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_EN.md" class="paper-link">论文 EN</a>
-          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_ZH.md" class="paper-link">论文 ZH</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_EN.md" class="paper-link">论文 EN</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_ZH.md" class="paper-link">论文 ZH</a>
         </div>
       </div>
 
@@ -544,8 +544,8 @@ footer a:hover{text-decoration:underline}
         <p>GameNNDecisionHead 作为侧枝模块嵌入 MiniMind 骨干（64M），通过 ThinkFuser 零额外参数复用 lm_head.weight，将决策偏置直接注入 LM logits。仅在 &lt;think&gt; token 位置激活。三个发布版本各有侧重，单张 RTX 5060 3 小时可完成训练。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/MuLun-Mind" target="_blank">查看仓库 →</a>
-          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER_CN.md" class="paper-link">论文 ZH</a>
-          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER.md" class="paper-link">论文 EN</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER_CN.md" class="paper-link">论文 ZH</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER.md" class="paper-link">论文 EN</a>
         </div>
       </div>
 
@@ -558,7 +558,7 @@ footer a:hover{text-decoration:underline}
         <p>彻底剥离 LLM 骨干，仅保留侧枝决策网络（65K 参数）。级联检测架构：33 条静态规则（L1, 1-5μs）→ 侧枝 ML 模型（L2, 10-30μs）→ 置信度门控（L3）。主动学习循环使模型持续进化，30 轮增量训练后从 BLOCK 准确率 32.5% 升至 100%。CPU 单核可部署。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/MuLun-Waf" target="_blank">查看仓库 →</a>
-          <a href="https://github.com/guaidao2/MuLun-Waf/blob/main/DEPLOY.md" class="paper-link">部署指南</a>
+          <a href="https://github.com/guaidao2/MuLun-Waf/blob/master/DEPLOY.md" class="paper-link">部署指南</a>
         </div>
       </div>
     </div>
@@ -622,15 +622,15 @@ footer a:hover{text-decoration:underline}
     </div>
 
     <div class="paper-refs">
-      <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER_CN.md" class="paper-ref" target="_blank">
+      <a href="https://github.com/guaidao2/Game-nn-O/blob/master/PAPER_CN.md" class="paper-ref" target="_blank">
         <span class="pr-num">01</span>
         <div><div class="pr-title">Game-nn-O 架构论文</div><div class="pr-desc">双路径决策架构 · 中/EN</div></div>
       </a>
-      <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_EN.md" class="paper-ref" target="_blank">
+      <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_EN.md" class="paper-ref" target="_blank">
         <span class="pr-num">02</span>
         <div><div class="pr-title">GameNN World Model 论文</div><div class="pr-desc">通用递归博弈决策架构 · EN</div></div>
       </a>
-      <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER_CN.md" class="paper-ref" target="_blank">
+      <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER_CN.md" class="paper-ref" target="_blank">
         <span class="pr-num">03</span>
         <div><div class="pr-title">MuLun 侧枝决策论文</div><div class="pr-desc">语言引导博弈推理 · 中/EN</div></div>
       </a>
@@ -704,8 +704,8 @@ footer a:hover{text-decoration:underline}
         </div>
         <div class="p-links">
           <a href="https://github.com/guaidao2/Game-nn-O" class="pri" target="_blank">查看仓库</a>
-          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER_CN.md" class="sec" target="_blank">论文 ZH</a>
-          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER.md" class="sec" target="_blank">论文 EN</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/master/PAPER_CN.md" class="sec" target="_blank">论文 ZH</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/master/PAPER.md" class="sec" target="_blank">论文 EN</a>
         </div>
       </div>
 
@@ -722,8 +722,8 @@ footer a:hover{text-decoration:underline}
         </div>
         <div class="p-links">
           <a href="https://github.com/guaidao2/GameNN-WorldModel" class="pri" target="_blank">查看仓库</a>
-          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_EN.md" class="sec" target="_blank">论文 EN</a>
-          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_ZH.md" class="sec" target="_blank">论文 ZH</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_EN.md" class="sec" target="_blank">论文 EN</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_ZH.md" class="sec" target="_blank">论文 ZH</a>
         </div>
       </div>
 
@@ -740,8 +740,8 @@ footer a:hover{text-decoration:underline}
         </div>
         <div class="p-links">
           <a href="https://github.com/guaidao2/MuLun-Mind" class="pri" target="_blank">查看仓库</a>
-          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER_CN.md" class="sec" target="_blank">论文 ZH</a>
-          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER.md" class="sec" target="_blank">论文 EN</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER_CN.md" class="sec" target="_blank">论文 ZH</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER.md" class="sec" target="_blank">论文 EN</a>
         </div>
       </div>
 
@@ -758,8 +758,8 @@ footer a:hover{text-decoration:underline}
         </div>
         <div class="p-links">
           <a href="https://github.com/guaidao2/MuLun-Waf" class="pri" target="_blank">查看仓库</a>
-          <a href="https://github.com/guaidao2/MuLun-Waf/blob/main/DEPLOY.md" class="sec" target="_blank">部署指南</a>
-          <a href="https://github.com/guaidao2/MuLun-Waf/blob/main/USER_GUIDE.md" class="sec" target="_blank">用户手册</a>
+          <a href="https://github.com/guaidao2/MuLun-Waf/blob/master/DEPLOY.md" class="sec" target="_blank">部署指南</a>
+          <a href="https://github.com/guaidao2/MuLun-Waf/blob/master/USER_GUIDE.md" class="sec" target="_blank">用户手册</a>
         </div>
       </div>
     </div>
