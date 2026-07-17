@@ -570,9 +570,6 @@ footer a:hover{text-decoration:underline}
         训练成本集中在 GPU 集群，推理时仅需 CPU 单核 0.3ms。
       </p>
       <p style="margin-top:.8rem">
-        <strong>多领域应用场景：</strong>GameNN 的领域无关设计使其可无缝迁移至广泛场景。
-      </p>
-      <p style="margin-top:.8rem">
         <strong>规模化扩展 (Scaling)：</strong>当前默认配置（D=768, d=16, 952K 参数）
         仅是 GameNN 的能力下限。规模化扩展将在多个维度解锁涌现能力：
       </p>
@@ -584,7 +581,7 @@ footer a:hover{text-decoration:underline}
             状态空间越大，信息集容量越高。
             Tank Chess 验证：d=16 时 54K 参数，
             d=64 时 102K 参数，胜率从 0% 跃升至 73%。
-            d=256 时参数约 1.5M，可编码更复杂的态势信息（如 64x64 地图、长时间叛断变化、多智能体协作）。
+            d=256 时参数约 1.5M，可编码更复杂的态势信息（如 64x64 地图、长时间态势变化、多智能体协作）。
           </p>
         </div>
         <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
@@ -607,7 +604,7 @@ footer a:hover{text-decoration:underline}
             StateEncoder 的 VAE 层实现多模态融合：
             视觉、语音、文本统一编码为结构化状态。
             这意味着 GameNN 可以直接处理监控视频、
-            市场新闻、交通景像等原始输入。
+            市场新闻、交通景象等原始输入。
           </p>
         </div>
         <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
@@ -630,11 +627,14 @@ footer a:hover{text-decoration:underline}
           d=16 (952K) → 0.3ms CPU / 0.02ms GPU &nbsp;|&nbsp;
           d=64 (1.2M) → 0.5ms CPU / 0.03ms GPU &nbsp;|&nbsp;
           d=256 (6.8M) → 2.1ms CPU / 0.08ms GPU<br>
-          即使扩展至 d=1024（级 20M 参数），推理延迟仍然在毫秒级。
+          即使扩展至 d=1024（约 20M 参数），推理延迟仍然在毫秒级。
           这意味着可以用大规模 GPU 集群训练一次，
           然后部署到任何设备上推理——包括手机、车载、边缘设备。
         </p>
       </div>
+      <p style="margin-top:1.2rem">
+        <strong>多领域应用场景：</strong>GameNN 的领域无关设计使其可无缝迁移至广泛场景。
+      </p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem">
         <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border)">
           <strong style="color:var(--cyan)">网络安全 (Cybersecurity)</strong>
@@ -652,7 +652,7 @@ footer a:hover{text-decoration:underline}
           <strong style="color:var(--orange)">量化交易 (Quantitative Trading)</strong>
           <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
             市场数据→ StateEncoder 编码为状态（34+ 维）。
-            RNNStep 记忆历史价格脞步。
+            RNNStep 记忆历史价格走势。
             策略头分层：攻击型 / 对冲型 / 保守型。
             世界模型预测短期价格波动。
             Fuser 输出交易信号，可嵌入交易系统作为侧枝决策模块。
