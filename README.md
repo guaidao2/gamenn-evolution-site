@@ -1,51 +1,27 @@
-# GameNN 架构演化展示站点
+# GameNN 架构演化
 
-玄幕安全团队 · July 2026
+**玄幕安全团队 · July 2026**
 
-GameNN 从博弈推演引擎到语言模型侧枝决策，再到独立智能 WAF 产品的完整演化历程。
+https://guaidao2.github.io/gamenn-evolution-site/
 
-## 页面构成
+---
 
-| 区块 | 内容 |
-|------|------|
-| **Hero** | 统计概览 + 渐变标题 + 动态粒子背景 |
-| **演化史** | 5 阶段时间线，含仓库 + 论文链接 |
-| **版本对比** | 11 维度 × 5 版本对比表 + 论文引用卡片 |
-| **核心架构** | 贯穿所有版本的统一神经回路流程图 |
-| **项目族谱** | 5 个项目卡片，含指标 + 论文/仓库链接 |
-| **关键数据** | 8 个核心数字 |
+GameNN 是一个从博弈推演引擎逐步演化为通用决策底座，再到两个产品级落地的神经网络架构家族。本站点展示了整个演化历程。
 
-## 设计
+## 站点内容
 
-- **动态粒子** — Canvas 粒子系统 + 连接线
-- **浮动光晕** — 3 个 CSS 渐变球体浮动动画
-- **渐变文字** — 标题 cyan→purple 渐变 + 背景漂移动画
-- **网格叠加** — 60px 网格线，随滚动弱视差
-- **滚动动画** — IntersectionObserver 驱动的渐入效果
-- **导航高亮** — 滚动时导航边框变色
-- **主题** — 深色，zero emoji，纯几何装饰
+**演化史** — 五个阶段的演进时间线，每个阶段附论文与仓库链接。
+**版本对比** — 从参数量、世界模型、训练算法、部署形态等 11 个维度横向对比五个版本。
+**核心架构** — 贯穿所有版本的统一神经回路流程图。
+**项目族谱** — 每个独立仓库的详细介绍、关键指标与相关文档。
+**关键数据** — 架构演化中的核心数字。
 
-## 部署到 GitHub Pages
+## 相关仓库
 
-```bash
-# 1. 创建 GitHub 仓库，推送到 main
-git init
-git add .
-git commit -m "init: GameNN evolution site"
-git remote add origin https://github.com/你的用户名/gamenn-evolution.git
-git branch -M main
-git push -u origin main
-
-# 2. 仓库 Settings → Pages → 选 Deploy from branch main / (root) → Save
-# 3. 等待 1-2 分钟，访问 https://你的用户名.github.io/gamenn-evolution
-```
-
-## 本地预览
-
-```bash
-python -m http.server 8000
-# → http://localhost:8000
-```
+- [Game-nn-O](https://github.com/guaidao2/Game-nn-O) — 原始双路径架构
+- [GameNN-WorldModel](https://github.com/guaidao2/GameNN-WorldModel) — 通用决策底座
+- [MuLun-Mind](https://github.com/guaidao2/MuLun-Mind) — LLM 侧枝决策系统
+- [MuLun-Waf](https://github.com/guaidao2/MuLun-Waf) — 轻量智能 WAF
 
 ## 许可证
 
