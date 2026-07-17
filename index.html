@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameNN 架构演化 · 玄幕安全团队</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   Reset & Variables
+   ═══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-900:#08080e;
+  --bg-850:#0c0c16;
+  --bg-800:#0e0e18;
+  --bg-750:#12121e;
+  --bg-700:#161622;
+  --bg-600:#1e1e30;
+  --border:#28283e;
+  --border-light:#32324a;
+  --text-100:#eaeaef;
+  --text-150:#c8c8d8;
+  --text-200:#a0a0b8;
+  --text-300:#686882;
+  --cyan:#00d4ff;
+  --blue:#4a7dff;
+  --purple:#8b5cf6;
+  --green:#22d47b;
+  --orange:#f59e0b;
+  --red:#ef4444;
+  --glow-cyan:0 0 40px rgba(0,212,255,.1);
+  --glow-purple:0 0 40px rgba(139,92,246,.1);
+  --radius:10px;
+  --radius-lg:16px;
+  --radius-xl:20px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+body{
+  font-family:'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif;
+  background:var(--bg-900);color:var(--text-100);
+  line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(0,212,255,.25);color:#fff}
+
+/* ═══════════════════════════════════════════════
+   Particle Canvas
+   ═══════════════════════════════════════════════ */
+#particles-canvas{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+}
+
+/* ── Grid overlay ── */
+.grid-overlay{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* ── Animated gradient orbs ── */
+.orb{
+  position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.orb-1{
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(0,212,255,.06),transparent 70%);
+  top:-10%;left:-10%;animation-delay:0s;
+}
+.orb-2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(139,92,246,.05),transparent 70%);
+  bottom:-5%;right:-5%;animation-delay:-7s;
+}
+.orb-3{
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(74,125,255,.04),transparent 70%);
+  top:40%;right:20%;animation-delay:-14s;
+}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(30px,-20px) scale(1.05)}
+  50%{transform:translate(-20px,30px) scale(.95)}
+  75%{transform:translate(20px,10px) scale(1.02)}
+}
+
+/* ═══════════════════════════════════════════════
+   Navigation
+   ═══════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 2rem;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(8,8,14,.75);backdrop-filter:blur(24px) saturate(1.4);
+  border-bottom:1px solid var(--border);
+  transition:border-color .4s;
+}
+.nav-scrolled{border-color:rgba(0,212,255,.15)}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;font-weight:700;font-size:1rem;
+  letter-spacing:-.02em;text-decoration:none;color:var(--text-100);
+}
+.logo-box{
+  width:26px;height:26px;border-radius:6px;
+  border:1.5px solid var(--cyan);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;color:var(--cyan);
+  font-family:'JetBrains Mono',monospace;
+}
+.nav-links{display:flex;gap:1.2rem;list-style:none;align-items:center}
+.nav-links a{
+  color:var(--text-300);text-decoration:none;font-size:.78rem;font-weight:500;
+  transition:color .3s;padding:4px 0;
+}
+.nav-links a:hover{color:var(--text-100)}
+.nav-indicator{
+  height:1.5px;background:var(--cyan);position:absolute;bottom:0;
+  transition:all .4s cubic-bezier(.16,1,.3,1);border-radius:2px;
+}
+
+/* ═══════════════════════════════════════════════
+   Hero
+   ═══════════════════════════════════════════════ */
+.hero{
+  position:relative;z-index:2;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:7rem 2rem 5rem;text-align:center;
+}
+.hero-content{max-width:840px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 16px;border-radius:100px;
+  background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);
+  color:var(--cyan);font-size:.72rem;font-weight:500;
+  letter-spacing:.06em;margin-bottom:1.5rem;
+}
+.hero-badge .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  animation:pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{
+  font-size:clamp(2.8rem,7.5vw,5rem);font-weight:900;
+  letter-spacing:-.04em;line-height:1.05;margin-bottom:1.2rem;
+}
+.gradient-text{
+  background:linear-gradient(135deg,var(--cyan) 0%,var(--purple) 60%,var(--blue) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  background-size:200% 200%;animation:gradientShift 6s ease-in-out infinite;
+}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero .desc{
+  font-size:clamp(.95rem,1.5vw,1.1rem);color:var(--text-200);
+  max-width:600px;margin:0 auto 2.5rem;line-height:1.7;
+}
+.hero-stats{
+  display:flex;gap:2.2rem;justify-content:center;flex-wrap:wrap;
+  padding-top:1.8rem;border-top:1px solid var(--border);
+}
+.hero-stat{text-align:center}
+.hero-stat .num{
+  font-size:1.7rem;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(135deg,var(--text-100),var(--text-200));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-stat .label{font-size:.75rem;color:var(--text-300);margin-top:2px}
+.scroll-indicator{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  color:var(--text-300);font-size:.7rem;animation:bounce 2s infinite;
+}
+.scroll-indicator .line{width:1px;height:32px;background:linear-gradient(var(--text-300),transparent)}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+
+/* ═══════════════════════════════════════════════
+   Sections
+   ═══════════════════════════════════════════════ */
+section{position:relative;z-index:2;padding:5rem 2rem}
+.section-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.68rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--cyan);margin-bottom:.8rem;
+}
+.section-label .accent{
+  width:20px;height:1.5px;background:var(--cyan);border-radius:2px;
+}
+.section-title{
+  font-size:clamp(1.5rem,3.2vw,2.4rem);font-weight:800;
+  letter-spacing:-.03em;margin-bottom:.6rem;line-height:1.2;
+}
+.section-sub{
+  color:var(--text-200);font-size:.88rem;max-width:540px;
+  margin-bottom:2.5rem;line-height:1.6;
+}
+.container{max-width:1120px;margin:0 auto}
+.anchored{scroll-margin-top:70px}
+
+/* ═══════════════════════════════════════════════
+   Timeline
+   ═══════════════════════════════════════════════ */
+.timeline-section{background:var(--bg-800)}
+.timeline{position:relative;padding-left:2.6rem}
+.timeline::before{
+  content:'';position:absolute;left:11px;top:8px;bottom:8px;
+  width:2px;
+  background:linear-gradient(180deg,var(--cyan),var(--blue),var(--purple),var(--orange),var(--green));
+  border-radius:2px;
+}
+.tl-item{
+  position:relative;padding:1.6rem 0 1.6rem 1.6rem;
+  opacity:0;transform:translateY(24px);
+  transition:all .6s cubic-bezier(.16,1,.3,1);
+}
+.tl-item.visible{opacity:1;transform:translateY(0)}
+.tl-item::before{
+  content:'';position:absolute;left:-2.6rem;top:2rem;
+  width:13px;height:13px;border-radius:50%;
+  border:3px solid var(--bg-800);z-index:2;
+  transition:box-shadow .4s;
+}
+.tl-item:hover::before{transform:scale(1.3)}
+.tl-item:nth-child(1)::before{background:var(--cyan);box-shadow:0 0 14px rgba(0,212,255,.25)}
+.tl-item:nth-child(2)::before{background:var(--blue);box-shadow:0 0 14px rgba(74,125,255,.25)}
+.tl-item:nth-child(3)::before{background:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.25)}
+.tl-item:nth-child(4)::before{background:var(--orange);box-shadow:0 0 14px rgba(245,158,11,.25)}
+.tl-item:nth-child(5)::before{background:var(--green);box-shadow:0 0 14px rgba(34,212,123,.25)}
+.tl-meta{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+.tl-tag{
+  display:inline-block;padding:2px 10px;border-radius:100px;
+  font-size:.65rem;font-weight:600;letter-spacing:.02em;
+}
+.tl-item:nth-child(1) .tl-tag{background:rgba(0,212,255,.1);color:var(--cyan)}
+.tl-item:nth-child(2) .tl-tag{background:rgba(74,125,255,.1);color:var(--blue)}
+.tl-item:nth-child(3) .tl-tag{background:rgba(139,92,246,.1);color:var(--purple)}
+.tl-item:nth-child(4) .tl-tag{background:rgba(245,158,11,.1);color:var(--orange)}
+.tl-item:nth-child(5) .tl-tag{background:rgba(34,212,123,.1);color:var(--green)}
+.tl-date{font-size:.74rem;color:var(--text-300);font-weight:500}
+.tl-item h3{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.tl-item p{color:var(--text-200);font-size:.85rem;max-width:700px;margin-bottom:10px;line-height:1.6}
+.tl-links{display:flex;gap:14px;flex-wrap:wrap}
+.tl-links a{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:.78rem;color:var(--cyan);text-decoration:none;
+  transition:opacity .3s;
+}
+.tl-links a:hover{opacity:.7}
+.tl-links .paper-link{color:var(--text-200);font-size:.74rem}
+.tl-links .paper-link:hover{color:var(--cyan)}
+
+/* ═══════════════════════════════════════════════
+   Comparison Table
+   ═══════════════════════════════════════════════ */
+.compare-section{background:var(--bg-750)}
+.cmp-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--bg-700)}
+.cmp-table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:700px}
+.cmp-table thead{background:var(--bg-600)}
+.cmp-table th{
+  padding:12px 14px;text-align:left;font-weight:600;font-size:.7rem;
+  color:var(--text-200);text-transform:uppercase;letter-spacing:.06em;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+.cmp-table td{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  color:var(--text-200);line-height:1.5;font-size:.78rem;
+}
+.cmp-table tbody tr:last-child td{border-bottom:none}
+.cmp-table tbody tr{transition:background .2s}
+.cmp-table tbody tr:hover{background:rgba(0,212,255,.025)}
+.cmp-table td:first-child{font-weight:600;color:var(--text-150);white-space:nowrap;font-size:.75rem}
+.cmp-tag{
+  display:inline-block;padding:1px 7px;border-radius:4px;
+  font-size:.65rem;font-weight:600;
+}
+.cmp-tag.c0{background:rgba(0,212,255,.08);color:var(--cyan)}
+.cmp-tag.c1{background:rgba(74,125,255,.08);color:var(--blue)}
+.cmp-tag.c2{background:rgba(139,92,246,.08);color:var(--purple)}
+.cmp-tag.c3{background:rgba(245,158,11,.08);color:var(--orange)}
+.cmp-tag.c4{background:rgba(34,212,123,.08);color:var(--green)}
+.cmp-good{color:var(--green)}
+.cmp-mid{color:var(--orange)}
+
+/* ── Paper references in compare section ── */
+.paper-refs{margin-top:1.5rem;display:flex;gap:16px;flex-wrap:wrap}
+.paper-ref{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:var(--radius);
+  background:var(--bg-700);border:1px solid var(--border);
+  text-decoration:none;transition:all .3s;
+  flex:1;min-width:200px;
+}
+.paper-ref:hover{border-color:var(--cyan);box-shadow:var(--glow-cyan);transform:translateY(-2px)}
+.paper-ref .pr-num{font-size:.7rem;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace;min-width:28px}
+.paper-ref .pr-title{font-size:.78rem;color:var(--text-200);font-weight:500}
+.paper-ref .pr-desc{font-size:.68rem;color:var(--text-300);margin-top:1px}
+
+/* ═══════════════════════════════════════════════
+   Architecture Flow
+   ═══════════════════════════════════════════════ */
+.arch-section{background:var(--bg-700)}
+.arch-flow{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:5px;padding:2.5rem 0;
+}
+.arch-node{
+  background:var(--bg-600);border:1px solid var(--border);
+  border-radius:var(--radius);padding:12px 18px;
+  text-align:center;font-size:.78rem;font-weight:500;
+  transition:all .4s;min-width:85px;
+}
+.arch-node:hover{border-color:var(--cyan);box-shadow:var(--glow-cyan);transform:scale(1.04);z-index:3}
+.arch-node .sub{font-size:.62rem;color:var(--text-300);font-weight:400;margin-top:2px}
+.arch-arrow{color:var(--text-300);font-size:.9rem;flex-shrink:0}
+.arch-node.core{
+  border-color:var(--cyan);background:rgba(0,212,255,.04);
+  box-shadow:var(--glow-cyan);
+}
+.arch-note{
+  text-align:center;color:var(--text-300);font-size:.78rem;margin-top:1.5rem;
+  padding:.8rem 1.2rem;background:var(--bg-800);border-radius:var(--radius);
+  border:1px dashed var(--border);line-height:1.6;
+}
+.arch-note strong{color:var(--text-150)}
+
+/* ═══════════════════════════════════════════════
+   Project Cards
+   ═══════════════════════════════════════════════ */
+.projects-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.2rem;margin-top:1.5rem;
+}
+.p-card{
+  background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:1.8rem;transition:all .4s cubic-bezier(.16,1,.3,1);
+  opacity:0;transform:translateY(20px);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.p-card.visible{opacity:1;transform:translateY(0)}
+.p-card:hover{
+  border-color:rgba(0,212,255,.18);transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(0,0,0,.3),var(--glow-cyan);
+}
+.p-card .bg-glow{
+  position:absolute;top:-40%;right:-40%;width:80%;height:80%;
+  background:radial-gradient(circle,rgba(0,212,255,.025),transparent 70%);
+  pointer-events:none;
+}
+.p-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 10px;border-radius:6px;font-size:.65rem;font-weight:600;
+  margin-bottom:.8rem;letter-spacing:.03em;width:fit-content;
+}
+.p-card:nth-child(1) .p-badge{background:rgba(0,212,255,.08);color:var(--cyan)}
+.p-card:nth-child(2) .p-badge{background:rgba(74,125,255,.08);color:var(--blue)}
+.p-card:nth-child(3) .p-badge{background:rgba(139,92,246,.08);color:var(--purple)}
+.p-card:nth-child(4) .p-badge{background:rgba(245,158,11,.08);color:var(--orange)}
+.p-card:nth-child(5) .p-badge{background:rgba(34,212,123,.08);color:var(--green)}
+.p-card h3{font-size:1.05rem;font-weight:700;margin-bottom:1px}
+.p-sub{font-size:.72rem;color:var(--text-300);margin-bottom:8px}
+.p-desc{color:var(--text-200);font-size:.8rem;margin-bottom:.8rem;line-height:1.6;flex:1}
+.p-metrics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.8rem}
+.p-metrics .pm{
+  background:var(--bg-600);padding:2px 9px;border-radius:5px;
+  font-size:.68rem;color:var(--text-200);font-weight:500;
+}
+.p-metrics .pm strong{color:var(--text-100)}
+.p-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.p-links a{
+  padding:5px 13px;border-radius:7px;font-size:.74rem;font-weight:500;
+  text-decoration:none;transition:all .25s;
+}
+.p-links .pri{
+  background:var(--cyan);color:var(--bg-900);
+}
+.p-links .pri:hover{box-shadow:0 0 20px rgba(0,212,255,.2)}
+.p-links .sec{
+  border:1px solid var(--border);color:var(--text-200);
+}
+.p-links .sec:hover{border-color:var(--cyan);color:var(--text-100)}
+
+/* ═══════════════════════════════════════════════
+   Metrics
+   ═══════════════════════════════════════════════ */
+.metrics-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1rem;margin-top:1.5rem;
+}
+.m-card{
+  background:var(--bg-700);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.3rem;
+  transition:all .4s;opacity:0;transform:translateY(16px);
+  position:relative;overflow:hidden;
+}
+.m-card.visible{opacity:1;transform:translateY(0)}
+.m-card:hover{border-color:rgba(0,212,255,.1);box-shadow:var(--glow-cyan)}
+.m-card .mv{
+  font-size:1.7rem;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(135deg,var(--text-100),var(--text-200));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:2px;
+}
+.m-card .ml{color:var(--text-200);font-size:.76rem}
+
+/* ═══════════════════════════════════════════════
+   Footer
+   ═══════════════════════════════════════════════ */
+footer{
+  position:relative;z-index:2;text-align:center;padding:3rem 2rem;
+  border-top:1px solid var(--border);color:var(--text-300);font-size:.8rem;
+}
+footer a{color:var(--cyan);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ═══════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════ */
+@media(max-width:768px){
+  nav{padding:0 1rem}
+  .nav-links{display:none}
+  .hero{padding:6rem 1.2rem 4rem}
+  .hero-stats{gap:1.2rem}
+  .tl-item{padding-left:.8rem}
+  section{padding:3.5rem 1.2rem}
+  .projects-grid{grid-template-columns:1fr}
+  .cmp-table{font-size:.7rem}
+  .cmp-table th,.cmp-table td{padding:7px 8px}
+  .paper-refs{flex-direction:column}
+}
+@media(max-width:480px){
+  .hero h1{font-size:2rem}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Dynamic Background ─── -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<canvas id="particles-canvas"></canvas>
+<div class="grid-overlay"></div>
+
+<!-- ─── Nav ─── -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <span class="logo-box">G</span>
+    GameNN
+  </a>
+  <ul class="nav-links">
+    <li><a href="#evolution">演化史</a></li>
+    <li><a href="#compare">版本对比</a></li>
+    <li><a href="#architecture">核心架构</a></li>
+    <li><a href="#projects">项目族谱</a></li>
+    <li><a href="#metrics">关键数据</a></li>
+  </ul>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      玄幕安全团队 · July 2026
+    </div>
+    <h1><span class="gradient-text">GameNN</span> 架构演化</h1>
+    <p class="desc">
+      从博弈推演引擎到语言模型侧枝决策，再到独立智能 WAF 产品。<br>
+      同一个核心回路，三个产品级落地，全部开源。
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">5</div><div class="label">模块化组件</div></div>
+      <div class="hero-stat"><div class="num">4</div><div class="label">独立仓库</div></div>
+      <div class="hero-stat"><div class="num">65K→65M</div><div class="label">参数跨度</div></div>
+      <div class="hero-stat"><div class="num">~50&mu;s</div><div class="label">最低推理延迟</div></div>
+      <div class="hero-stat"><div class="num">3h</div><div class="label">单卡训练</div></div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>滚动阅读</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<!-- ─── Timeline ─── -->
+<section class="timeline-section anchored" id="evolution">
+  <div class="container">
+    <div class="section-label"><span class="accent"></span>演化史</div>
+    <h2 class="section-title">从推演到落地</h2>
+    <p class="section-sub">GameNN 架构经历了从专用推演引擎到通用决策底座，再到两个产品化分支的演化路径。每一步都是对核心抽象的继承与再造。</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-meta">
+          <span class="tl-tag">原型</span>
+          <span class="tl-date">Game-nn Simulator · 内嵌于 Game-nn-O</span>
+        </div>
+        <h3>博弈推演引擎</h3>
+        <p>16 节点网络攻击模拟环境，两级树状路由（策略 → 专家集成），完整 RSSM 世界模型（GRU + prior/posterior + reward/obs/continue heads），PPO+GAE 自博弈训练，Gumbel-Softmax 温度退火，课程学习。这是 GameNN 一切的开端。</p>
+        <div class="tl-links">
+          <a href="https://github.com/guaidao2/Game-nn-O" target="_blank">查看 Game-nn-O 仓库 →</a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-meta">
+          <span class="tl-tag">双路径架构</span>
+          <span class="tl-date">Game-nn-O</span>
+        </div>
+        <h3>语言理解 + 博弈决策</h3>
+        <p>将 MiniMind 语言模型 (64M) 与 Game-NN 决策核心融合。语言路径将自然语言安全报告编码为 16 维结构化状态，决策路径做分层策略推理，世界模型预测动作后果，MiniMind 反思后生成可读建议。</p>
+        <div class="tl-links">
+          <a href="https://github.com/guaidao2/Game-nn-O" target="_blank">查看仓库 →</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER_CN.md" class="paper-link">论文 ZH</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER.md" class="paper-link">论文 EN</a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-meta">
+          <span class="tl-tag">通用底座</span>
+          <span class="tl-date">GameNN World Model</span>
+        </div>
+        <h3>领域无关的通用决策架构</h3>
+        <p>从 Game-nn-O 中提取核心通用回路，定义为五个可组合模块：StateEncoder → RNNDecisionStep → ActionValueHead → WorldModelStep → Fuser。通过 GameNNConfig 配置策略/动作空间和维度。~952K 参数，CPU 单步 ~0.3ms。</p>
+        <div class="tl-links">
+          <a href="https://github.com/guaidao2/GameNN-WorldModel" target="_blank">查看仓库 →</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_EN.md" class="paper-link">论文 EN</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_ZH.md" class="paper-link">论文 ZH</a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-meta">
+          <span class="tl-tag">LLM 侧枝产品</span>
+          <span class="tl-date">MuLun-Mind（幕论·思维）</span>
+        </div>
+        <h3>语言模型侧枝决策系统</h3>
+        <p>GameNNDecisionHead 作为侧枝模块嵌入 MiniMind 骨干（64M），通过 ThinkFuser 零额外参数复用 lm_head.weight，将决策偏置直接注入 LM logits。仅在 &lt;think&gt; token 位置激活。三个发布版本各有侧重，单张 RTX 5060 3 小时可完成训练。</p>
+        <div class="tl-links">
+          <a href="https://github.com/guaidao2/MuLun-Mind" target="_blank">查看仓库 →</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER_CN.md" class="paper-link">论文 ZH</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER.md" class="paper-link">论文 EN</a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-meta">
+          <span class="tl-tag">独立 WAF 产品</span>
+          <span class="tl-date">MuLun-Waf（幕论·WAF）</span>
+        </div>
+        <h3>轻量智能 WAF</h3>
+        <p>彻底剥离 LLM 骨干，仅保留侧枝决策网络（65K 参数）。级联检测架构：33 条静态规则（L1, 1-5μs）→ 侧枝 ML 模型（L2, 10-30μs）→ 置信度门控（L3）。主动学习循环使模型持续进化，30 轮增量训练后从 BLOCK 准确率 32.5% 升至 100%。CPU 单核可部署。</p>
+        <div class="tl-links">
+          <a href="https://github.com/guaidao2/MuLun-Waf" target="_blank">查看仓库 →</a>
+          <a href="https://github.com/guaidao2/MuLun-Waf/blob/main/DEPLOY.md" class="paper-link">部署指南</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Comparison Table ─── -->
+<section class="compare-section anchored" id="compare">
+  <div class="container">
+    <div class="section-label"><span class="accent"></span>版本对比</div>
+    <h2 class="section-title">五个版本，一脉相承</h2>
+    <p class="section-sub">核心回路始终一致，输入输出层随领域变化。参数量跨度从 65K 到 65.5M，覆盖从嵌入式设备到 GPU 集群的部署场景。</p>
+
+    <div class="cmp-wrap">
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th><span class="cmp-tag c0">Simulator</span></th>
+          <th><span class="cmp-tag c1">Game-nn-O</span></th>
+          <th><span class="cmp-tag c2">GameNN WM</span></th>
+          <th><span class="cmp-tag c3">MuLun-Mind</span></th>
+          <th><span class="cmp-tag c4">MuLun-Waf</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>参数量</td><td>~50K</td><td>64M + ~50K</td><td>~952K</td><td>64M + ~952K</td><td>~65K</td></tr>
+        <tr>
+          <td>输入</td>
+          <td>164 维网络状态</td>
+          <td>自然语言<span style="display:block;font-size:.7rem;color:var(--text-300)">MiniMind 编码</span></td>
+          <td>任意向量 [D]<span style="display:block;font-size:.7rem;color:var(--text-300)">可配置</span></td>
+          <td>MiniMind 隐状态 [768]</td>
+          <td>32 维手工特征</td>
+        </tr>
+        <tr><td>状态维度</td><td>—</td><td>16</td><td>16（可配置）</td><td>16 / 64</td><td>64</td></tr>
+        <tr>
+          <td>世界模型</td>
+          <td class="cmp-good">RSSM（GRU+prior/posterior）</td>
+          <td class="cmp-mid">单步 MLP</td>
+          <td class="cmp-mid">单步 MLP</td>
+          <td class="cmp-mid">单步 MLP</td>
+          <td class="cmp-mid">单步 MLP</td>
+        </tr>
+        <tr><td>动作空间</td><td>8（攻/防各4）</td><td>8（安全动作）</td><td>8（可配置）</td><td>8（安全动作）</td><td>3（ALLOW/MONITOR/BLOCK）</td></tr>
+        <tr><td>策略空间</td><td>3</td><td>3</td><td>3（可配置）</td><td>3</td><td>3</td></tr>
+        <tr>
+          <td>训练算法</td>
+          <td class="cmp-good">PPO + Self-Play + GAE</td>
+          <td>SFT</td>
+          <td>SFT</td>
+          <td>SFT</td>
+          <td class="cmp-good">增量主动学习</td>
+        </tr>
+        <tr><td>LLM 骨干</td><td>无</td><td>MiniMind 64M</td><td>无</td><td>MiniMind 64M</td><td>无</td></tr>
+        <tr><td>推理硬件</td><td>CPU / GPU</td><td>GPU (8GB+)</td><td>CPU / GPU</td><td>GPU (8GB)</td><td class="cmp-good">CPU（单核）</td></tr>
+        <tr><td>推理延迟</td><td>—</td><td>—</td><td>~0.3ms (CPU)</td><td>—</td><td class="cmp-good">&lt;50&mu;s（完整链路）</td></tr>
+        <tr><td>部署形态</td><td>离线模拟</td><td>概念验证</td><td>可嵌入库</td><td>产品级</td><td class="cmp-good">产品级</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="paper-refs">
+      <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER_CN.md" class="paper-ref" target="_blank">
+        <span class="pr-num">01</span>
+        <div><div class="pr-title">Game-nn-O 架构论文</div><div class="pr-desc">双路径决策架构 · 中/EN</div></div>
+      </a>
+      <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_EN.md" class="paper-ref" target="_blank">
+        <span class="pr-num">02</span>
+        <div><div class="pr-title">GameNN World Model 论文</div><div class="pr-desc">通用递归博弈决策架构 · EN</div></div>
+      </a>
+      <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER_CN.md" class="paper-ref" target="_blank">
+        <span class="pr-num">03</span>
+        <div><div class="pr-title">MuLun 侧枝决策论文</div><div class="pr-desc">语言引导博弈推理 · 中/EN</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Architecture Core ─── -->
+<section class="arch-section anchored" id="architecture">
+  <div class="container">
+    <div class="section-label"><span class="accent"></span>核心架构</div>
+    <h2 class="section-title">贯穿所有版本的统一神经回路</h2>
+    <p class="section-sub">从 simulator 的 164 维网络状态到 WAF 的 32 维特征，核心回路始终保持一致。输入输出层随领域变化，推理内核不动。</p>
+
+    <div class="arch-flow">
+      <div class="arch-node">Input<br><span class="sub">any [D]</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">StateEncoder<br><span class="sub">VAE 双头</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node core">Structured State<br><span class="sub">[0,1]<sup>d</sup></span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">RNN Step<br><span class="sub">GRU 门控</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">ActionValue<br><span class="sub">策略 · 动作 · 价值</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">World Model<br><span class="sub">一步预测</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">Output<br><span class="sub">决策 / 偏置</span></div>
+    </div>
+
+    <div class="arch-note">
+      <strong>关键洞察：</strong>MuLun-Waf 将输入从 768 维 LLM 隐状态替换为 32 维 WAF 特征后，核心回路不需要改一行代码。StateEncoder 负责适配，RSSM 核心负责推理。
+    </div>
+  </div>
+</section>
+
+<!-- ─── Projects ─── -->
+<section class="projects-section anchored" id="projects">
+  <div class="container">
+    <div class="section-label"><span class="accent"></span>项目族谱</div>
+    <h2 class="section-title">每一个都是独立作品</h2>
+    <p class="section-sub">从模拟器到 WAF 产品，每个仓库都有独立论文、训练脚本、评估数据和部署文档，共享同一套决策回路。</p>
+
+    <div class="projects-grid">
+      <div class="p-card">
+        <div class="bg-glow"></div>
+        <span class="p-badge">原型 · Simulator</span>
+        <h3>Game-nn Simulator</h3>
+        <div class="p-sub">内嵌于 Game-nn-O 仓库</div>
+        <div class="p-desc">16 节点网络攻防推演引擎，两级树状路由（策略 → CNN/RNN/MLP/GAT 等专家集成），完整 RSSM 世界模型，PPO+GAE 自博弈训练，课程学习。</div>
+        <div class="p-metrics">
+          <span class="pm">路由级别: <strong>2</strong></span>
+          <span class="pm">专家数: <strong>7+</strong></span>
+          <span class="pm">训练: <strong>PPO+Self-Play</strong></span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/guaidao2/Game-nn-O" class="pri" target="_blank">查看仓库</a>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="bg-glow"></div>
+        <span class="p-badge">双路径 · Game-nn-O</span>
+        <h3>Game-nn-O</h3>
+        <div class="p-sub">原型验证</div>
+        <div class="p-desc">MiniMind (64M) 编码自然语言 → 状态投影到 16 维 → Game-NN 决策 → 世界模型预测后果 → MiniMind 反思生成可读建议。双路径架构的首次提出。</div>
+        <div class="p-metrics">
+          <span class="pm">LLM: <strong>64M</strong></span>
+          <span class="pm">状态维度: <strong>16</strong></span>
+          <span class="pm">论文: <strong>中/EN</strong></span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/guaidao2/Game-nn-O" class="pri" target="_blank">查看仓库</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER_CN.md" class="sec" target="_blank">论文 ZH</a>
+          <a href="https://github.com/guaidao2/Game-nn-O/blob/main/PAPER.md" class="sec" target="_blank">论文 EN</a>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="bg-glow"></div>
+        <span class="p-badge">底座 · GameNN WM</span>
+        <h3>GameNN World Model</h3>
+        <div class="p-sub">通用决策架构</div>
+        <div class="p-desc">领域无关的通用决策底座。五模块可组合设计 + GumbelRouter。通过 GameNNConfig 配置策略/动作空间和维度，任意领域可用。952K 参数，~8MB 内存。</div>
+        <div class="p-metrics">
+          <span class="pm">参数: <strong>952K</strong></span>
+          <span class="pm">CPU: <strong>~0.3ms</strong></span>
+          <span class="pm">内存: <strong>~8MB</strong></span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/guaidao2/GameNN-WorldModel" class="pri" target="_blank">查看仓库</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_EN.md" class="sec" target="_blank">论文 EN</a>
+          <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/main/PAPER_ZH.md" class="sec" target="_blank">论文 ZH</a>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="bg-glow"></div>
+        <span class="p-badge">产品 · MuLun-Mind</span>
+        <h3>MuLun-Mind 幕论·思维</h3>
+        <div class="p-sub">LLM 侧枝决策系统</div>
+        <div class="p-desc">MiniMind 骨干 + GameNNDecisionHead 侧枝 + ThinkFuser。零额外参数融合决策到 LM logits，仅在 &lt;think&gt; token 激活。三个发布版本各有侧重。</div>
+        <div class="p-metrics">
+          <span class="pm">总参数: <strong>65.5M</strong></span>
+          <span class="pm">训练: <strong>RTX 5060 · 3h</strong></span>
+          <span class="pm">版本: <strong>3 变体</strong></span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/guaidao2/MuLun-Mind" class="pri" target="_blank">查看仓库</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER_CN.md" class="sec" target="_blank">论文 ZH</a>
+          <a href="https://github.com/guaidao2/MuLun-Mind/blob/main/PAPER.md" class="sec" target="_blank">论文 EN</a>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="bg-glow"></div>
+        <span class="p-badge">产品 · MuLun-Waf</span>
+        <h3>MuLun-Waf 幕论·WAF</h3>
+        <div class="p-sub">独立智能 WAF</div>
+        <div class="p-desc">完全剥离 LLM，仅保留侧枝决策网络。33 条规则引擎 + ML 模型级联 + 置信度门控。主动学习循环，30 轮增量训练到达 100% 准确率。CPU 单核可部署。</div>
+        <div class="p-metrics">
+          <span class="pm">参数: <strong>65K</strong></span>
+          <span class="pm">延迟: <strong>&lt;50&mu;s</strong></span>
+          <span class="pm">权重: <strong>264KB</strong></span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/guaidao2/MuLun-Waf" class="pri" target="_blank">查看仓库</a>
+          <a href="https://github.com/guaidao2/MuLun-Waf/blob/main/DEPLOY.md" class="sec" target="_blank">部署指南</a>
+          <a href="https://github.com/guaidao2/MuLun-Waf/blob/main/USER_GUIDE.md" class="sec" target="_blank">用户手册</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Metrics ─── -->
+<section class="metrics-section anchored" id="metrics">
+  <div class="container">
+    <div class="section-label"><span class="accent"></span>关键数据</div>
+    <h2 class="section-title">数字背后的设计取舍</h2>
+    <p class="section-sub">每一代都在特定维度上做出了明确的权衡——没有免费的午餐，但每一餐都吃得明明白白。</p>
+
+    <div class="metrics-grid">
+      <div class="m-card"><div class="mv">952K</div><div class="ml">GameNN 核心参数量</div></div>
+      <div class="m-card"><div class="mv">~50&mu;s</div><div class="ml">MuLun-Waf 端到端推理延迟</div></div>
+      <div class="m-card"><div class="mv">0.44</div><div class="ml">MuLun-State16 置信度价差</div></div>
+      <div class="m-card"><div class="mv">65.5M</div><div class="ml">MuLun-Mind 总参数量</div></div>
+      <div class="m-card"><div class="mv">30 轮</div><div class="ml">MuLun-Waf 增量 → 100%</div></div>
+      <div class="m-card"><div class="mv">264 KB</div><div class="ml">MuLun-Waf 权重体积</div></div>
+      <div class="m-card"><div class="mv">16</div><div class="ml">默认决策状态维度</div></div>
+      <div class="m-card"><div class="mv">768</div><div class="ml">观测维度（GameNN 默认）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer>
+  <p>玄幕安全团队 · <a href="https://github.com/guaidao2" target="_blank">@guaidao2</a> &nbsp;·&nbsp; MIT License</p>
+  <p style="margin-top:5px;font-size:.74rem;color:var(--text-300)">GameNN 架构演化 · July 2026</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════
+   Particles
+   ═══════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [], animId, w, h;
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const COUNT = Math.min(80, Math.floor(w * h / 15000));
+
+  for(let i=0; i<COUNT; i++){
+    particles.push({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+      r: Math.random()*1.8+0.6,
+      a: Math.random()*0.5+0.15,
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const cy = window.scrollY || 0;
+
+    for(const p of particles){
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x<0) p.x=w; if(p.x>w) p.x=0;
+      if(p.y<0) p.y=h; if(p.y>h) p.y=0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(0,212,255,${p.a})`;
+      ctx.fill();
+    }
+
+    // connecting lines
+    for(let i=0; i<particles.length; i++){
+      for(let j=i+1; j<particles.length; j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 120){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0,212,255,${0.06*(1-dist/120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+
+/* ═══════════════════════════════════════════════
+   Intersection Observer
+   ═══════════════════════════════════════════════ */
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:.1, rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.tl-item, .p-card, .m-card').forEach(el => obs.observe(el));
+
+/* ═══════════════════════════════════════════════
+   Nav scroll style
+   ═══════════════════════════════════════════════ */
+const nav = document.getElementById('navbar');
+document.addEventListener('scroll', () => {
+  nav.classList.toggle('nav-scrolled', window.scrollY > 40);
+});
+
+/* ═══════════════════════════════════════════════
+   Nav smooth scroll
+   ═══════════════════════════════════════════════ */
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const el = document.getElementById(a.getAttribute('href').slice(1));
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+/* ═══════════════════════════════════════════════
+   Parallax on grid overlay
+   ═══════════════════════════════════════════════ */
+document.addEventListener('scroll', () => {
+  document.querySelector('.grid-overlay').style.transform = `translateY(${window.scrollY * .04}px)`;
+});
+</script>
+</body>
+</html>
