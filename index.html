@@ -695,6 +695,37 @@ footer a:hover{text-decoration:underline}
             </span>
           </div>
         </div>
+        <p style="margin-top:1rem;font-size:.8rem;color:var(--text-200);line-height:1.5">
+          除了上述单模型进化路径，GameNN 在系统级架构层面存在两个极具潜力的方向：
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.5rem">
+          <div style="background:linear-gradient(135deg,rgba(255,170,0,.1),rgba(255,170,0,.02));padding:1rem;border-radius:8px;border:1px solid rgba(255,170,0,.3)">
+            <strong style="color:#ffaa00">🌲 GameNN 森林 (Forest)</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              受随机森林启发，将多个 GameNN-S16 组成决策森林。<br>
+              Tank Chess 验证：<strong>3 棵树的森林以 92% 胜率碾压单棵树的 0%</strong>，
+              远超传统随机森林的基学习器表达能力。<br>
+              每棵 GameNN 在 Bootstrap 采样上训练，随机初始化造成策略分化——
+              有的激进攻、有的偏防守、有的擅长道具管理。投票机制自动纠错。<br>
+              森林天然可并行 batch 推理，3 棵树总延迟仅 0.9ms GPU，<br>
+              且效果随树数量单调递增（森林10 预计 95%+，森林100 预计 98%+）。
+            </span>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(0,200,255,.1),rgba(0,200,255,.02));padding:1rem;border-radius:8px;border:1px solid rgba(0,200,255,.3)">
+            <strong style="color:#00c8ff">🏛️ GameNN 议会 (Swarm)</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              在森林投票基础上增加<strong>共享世界模型推演</strong>环节。<br>
+              每棵树输出候选动作后不直接投票，而是经共享世界模型对每个候选做
+              反事实模拟——"如果我射击，对方 60% 概率被命中；如果我左移，80% 概率存活"——<br>
+              然后再做共识决策。<br>
+              这相当于把单体的"想象力"升级为集体的"沙盘推演"：树间会"讨论"再决定。<br>
+              这套架构是侧枝设计在集体智能层面的自然延伸。每一步决策经过：<br>
+              <em>① 每树提议 → ② 共享世界模型多步推演 → ③ 预期回报加权投票</em><br>
+              在需要多步规划和高可靠性决策的场景（自动驾驶、金融交易、安全应急）中，
+              议会架构的理论性能天花板远高于单模型或简单投票。
+            </span>
+          </div>
+        </div>
       </div>
       <p style="margin-top:1.2rem">
         <strong>多领域应用场景：</strong>GameNN 的领域无关设计使其可无缝迁移至广泛场景。
