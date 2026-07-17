@@ -632,6 +632,70 @@ footer a:hover{text-decoration:underline}
           然后部署到任何设备上推理——包括手机、车载、边缘设备。
         </p>
       </div>
+      <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border);margin-top:1rem;">
+        <strong style="color:var(--purple)">架构进化方向：何时需要换架构？</strong>
+        <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
+          GameNN 的当前设计（GRU + 线性世界模型 + 简单 Fuser）在 <strong>50K-2M 参数</strong>范围内表现最优，
+          但超出舒适区后需要以下替换：
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.5rem">
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">① GRU → Transformer</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当需要长期记忆（&gt;50 步）或复杂状态关联时，GRU 的信息衰减成为瓶颈。<br>
+              <em>替换方案：</em>RNNDecisionStep 替换为 2-4 层 Causal Transformer，<br>
+              参数量从 O(d²) 变为 O(4d²)，约 2-4 倍。<br>
+              <em>标志场景：</em>围棋、全盘策略游戏、3A 剧情 NPC。
+            </span>
+          </div>
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">② 线性世界模型 → 概率世界模型</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当前 WorldModelStep 是确定性线性投影，无法表达"可能发生什么"。<br>
+              <em>替换方案：</em>WorldModelStep 升级为 RSSM 风格的高斯随机模块<br>
+              或小型 VAE，输出均值 + 方差。<br>
+              <em>标志场景：</em>自动驾驶、金融风控、任何需要表达不确定性的场景。
+            </span>
+          </div>
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">③ 单层 Fuser → 注意力 Fuser</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当前 Fuser 只做简单加法偏置，在多侧枝或多宿主场景下效率低。<br>
+              <em>替换方案：</em>可学习的注意力权重 Fuser，<br>
+              自动选择哪个侧枝的输出在当前位置最相关。<br>
+              <em>标志场景：</em>多智能体协作、多个辅助决策模块同时运作。
+            </span>
+          </div>
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">④ 单智能体 → 通信协议栈</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当前每个 GameNN 实例独立决策，不与其他实例通信。<br>
+              <em>替换方案：</em>在 Fuser 之上添加一个额外的"通信头"<br>
+              用于多智能体状态广播与协同策略协调。<br>
+              <em>标志场景：</em>团队对抗、多机器人协作、军事推演。
+            </span>
+          </div>
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">⑤ 离线训练 → 在线学习循环</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当前训练方式为行为克隆 + 可选 PPO。在复杂环境中需要持续学习。<br>
+              <em>替换方案：</em>引入 Active Learning Loop：<br>
+              低置信度时刻 → 请求人工干预 → 存入数据库 → 夜间重训练。<br>
+              <em>标志场景：</em>WAF、入侵检测等需要持续适应新威胁的系统。
+            </span>
+          </div>
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">⑥ 单个策略头 → 分层 MoE 策略组</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当前三个策略头（aggressive/balanced/defensive）是硬编码的。<br>
+              <em>替换方案：</em>引入 MoE（Mixture of Experts），<br>
+              每个 expert 是一个独立的策略子网络，动态路由。<br>
+              这与 Game-nn 最初设计里的 TreeRouter 一致。<br>
+              <em>标志场景：</em>策略空间极大（如即时战略游戏、交易策略）。
+            </span>
+          </div>
+        </div>
+      </div>
       <p style="margin-top:1.2rem">
         <strong>多领域应用场景：</strong>GameNN 的领域无关设计使其可无缝迁移至广泛场景。
       </p>
