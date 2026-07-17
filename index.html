@@ -407,6 +407,39 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .m-card .ml{color:var(--text-200);font-size:.76rem}
 
 /* ═══════════════════════════════════════════════
+   Paper Abstract
+   ═══════════════════════════════════════════════ */
+.paper-section{background:var(--bg-800);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.paper-abstract{
+  max-width:900px;margin:0 auto;padding:2rem;
+  background:var(--bg-700);border:1px solid var(--border);border-radius:var(--radius-lg);
+  position:relative;
+}
+.paper-abstract::before{
+  content:'PAPER';position:absolute;top:-10px;left:20px;
+  padding:0 10px;background:var(--bg-800);
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;color:var(--cyan);
+}
+.paper-abstract h3{font-size:1.2rem;font-weight:700;margin-bottom:.6rem}
+.paper-abstract .meta{
+  display:flex;gap:16px;flex-wrap:wrap;
+  font-size:.75rem;color:var(--text-300);margin-bottom:1rem;
+  padding-bottom:.8rem;border-bottom:1px solid var(--border);
+}
+.paper-abstract .meta span{display:flex;align-items:center;gap:4px}
+.paper-abstract .authors{color:var(--text-150);font-weight:500}
+.paper-abstract .keywords{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:.8rem;
+}
+.paper-abstract .kw{
+  padding:2px 10px;border-radius:100px;font-size:.68rem;
+  background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);
+  color:var(--cyan);
+}
+.paper-abstract p{color:var(--text-200);font-size:.85rem;line-height:1.7;margin-bottom:0}
+.paper-abstract p strong{color:var(--text-100)}
+
+/* ═══════════════════════════════════════════════
    Footer
    ═══════════════════════════════════════════════ */
 footer{
@@ -484,6 +517,50 @@ footer a:hover{text-decoration:underline}
   <div class="scroll-indicator">
     <span>滚动阅读</span>
     <div class="line"></div>
+  </div>
+</section>
+
+<!-- ─── Paper Abstract ─── -->
+<section class="paper-section">
+  <div class="container" style="padding:2.5rem 0">
+    <div class="paper-abstract">
+      <h3>GameNN Architecture Evolution: From Game Simulation to Intelligent Decision</h3>
+      <div class="meta">
+        <span class="authors">XuanMu Security Team — @guaidao2</span>
+        <span>July 2026</span>
+        <span>4 Repos · 5 Generations</span>
+      </div>
+      <p>
+        <strong>Abstract:</strong> This paper systematically traces the complete evolution of the GameNN family.
+        GameNN originated as a 16-node network attack-defense simulation engine (Game-nn Simulator)
+        combining hierarchical mixture-of-experts routing with a full RSSM world model,
+        trained via PPO+GAE self-play.
+        It evolved into Game-nn-O, a dual-path architecture fusing a MiniMind language model
+        with the Game-NN decision core for structured game-theoretic reasoning.
+        The third generation extracted a domain-agnostic decision backbone —
+        GameNN World Model — defining five composable modules:
+        StateEncoder, RNNDecisionStep, ActionValueHead, WorldModelStep, and Fuser.
+        The fourth generation, MuLun-Mind, embedded GameNN as a sidecar decision module
+        for language models via ThinkFuser, reusing lm_head.weight at zero extra parameter cost.
+        The fifth generation, MuLun-Waf, stripped the LLM backbone entirely,
+        keeping only the 65K-parameter sidecar network with a cascaded rule + ML architecture
+        and an active learning loop for continuous evolution.
+        Recent validation in Tank Chess (a turn-based tactical board game) shows
+        GameNN achieving 73% win rate with only 54K parameters,
+        outperforming expert rule-based systems and validating the architecture's
+        general decision-making capability.
+      </p>
+      <div class="keywords">
+        <span class="kw">Game-Theoretic Decision</span>
+        <span class="kw">Hierarchical RL</span>
+        <span class="kw">World Model</span>
+        <span class="kw">Sidecar Architecture</span>
+        <span class="kw">RSSM</span>
+        <span class="kw">MuLun</span>
+        <span class="kw">Gumbel-Softmax</span>
+        <span class="kw">Tank Chess</span>
+      </div>
+    </div>
   </div>
 </section>
 
