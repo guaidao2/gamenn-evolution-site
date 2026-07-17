@@ -499,7 +499,7 @@ footer a:hover{text-decoration:underline}
   <div class="hero-content">
     <div class="hero-badge">
       <span class="dot"></span>
-      玄幕安全团队 · July 2026
+      玄幕安全团队 · 2026 年 7 月
     </div>
     <h1><span class="gradient-text">GameNN</span> 架构演化</h1>
     <p class="desc">
@@ -524,11 +524,11 @@ footer a:hover{text-decoration:underline}
 <section class="paper-section">
   <div class="container" style="padding:2.5rem 0">
     <div class="paper-abstract">
-      <h3>GameNN Architecture Evolution: From Game Simulation to Intelligent Decision</h3>
+      <h3>GameNN 架构演化：从博弈推演到通用智能决策</h3>
       <div class="meta">
-        <span class="authors">XuanMu Security Team — @guaidao2</span>
-        <span>July 2026</span>
-        <span>4 Repos · 5 Generations</span>
+        <span class="authors">玄幕安全团队 — @guaidao2</span>
+        <span>2026 年 7 月</span>
+        <span>5 代演化 · 4 个独立仓库</span>
       </div>
       <p>
         <strong>Abstract:</strong> This paper systematically traces the complete evolution of the GameNN family.
@@ -538,7 +538,7 @@ footer a:hover{text-decoration:underline}
         It evolved into Game-nn-O, a dual-path architecture fusing a MiniMind language model
         with the Game-NN decision core for structured game-theoretic reasoning.
         The third generation extracted a domain-agnostic decision backbone —
-        GameNN World Model — defining five composable modules:
+        GameNN 世界模型 — defining five composable modules:
         StateEncoder, RNNDecisionStep, ActionValueHead, WorldModelStep, and Fuser.
         The fourth generation, MuLun-Mind, embedded GameNN as a sidecar decision module
         for language models via ThinkFuser, reusing lm_head.weight at zero extra parameter cost.
@@ -551,10 +551,10 @@ footer a:hover{text-decoration:underline}
         general decision-making capability.
       </p>
       <div class="keywords">
-        <span class="kw">Game-Theoretic Decision</span>
-        <span class="kw">Hierarchical RL</span>
-        <span class="kw">World Model</span>
-        <span class="kw">Sidecar Architecture</span>
+        <span class="kw">博弈决策架构</span>
+        <span class="kw">分层强化学习</span>
+        <span class="kw">世界模型</span>
+        <span class="kw">侧枝架构</span>
         <span class="kw">RSSM</span>
         <span class="kw">MuLun</span>
         <span class="kw">Gumbel-Softmax</span>
@@ -601,7 +601,7 @@ footer a:hover{text-decoration:underline}
       <div class="tl-item">
         <div class="tl-meta">
           <span class="tl-tag">通用底座</span>
-          <span class="tl-date">GameNN World Model</span>
+          <span class="tl-date">GameNN 世界模型</span>
         </div>
         <h3>领域无关的通用决策架构</h3>
         <p>从 Game-nn-O 中提取核心通用回路，定义为五个可组合模块：StateEncoder → RNNDecisionStep → ActionValueHead → WorldModelStep → Fuser。通过 GameNNConfig 配置策略/动作空间和维度。~952K 参数，CPU 单步 ~0.3ms。</p>
@@ -705,7 +705,7 @@ footer a:hover{text-decoration:underline}
       </a>
       <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_EN.md" class="paper-ref" target="_blank">
         <span class="pr-num">02</span>
-        <div><div class="pr-title">GameNN World Model 论文</div><div class="pr-desc">通用递归博弈决策架构 · EN</div></div>
+        <div><div class="pr-title">GameNN 世界模型 论文</div><div class="pr-desc">通用递归博弈决策架构 · EN</div></div>
       </a>
       <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER_CN.md" class="paper-ref" target="_blank">
         <span class="pr-num">03</span>
@@ -733,7 +733,7 @@ footer a:hover{text-decoration:underline}
       <span class="arch-arrow">→</span>
       <div class="arch-node">ActionValue<br><span class="sub">策略 · 动作 · 价值</span></div>
       <span class="arch-arrow">→</span>
-      <div class="arch-node">World Model<br><span class="sub">一步预测</span></div>
+      <div class="arch-node">世界模型<br><span class="sub">一步预测</span></div>
       <span class="arch-arrow">→</span>
       <div class="arch-node">Output<br><span class="sub">决策 / 偏置</span></div>
     </div>
@@ -789,7 +789,7 @@ footer a:hover{text-decoration:underline}
       <div class="p-card">
         <div class="bg-glow"></div>
         <span class="p-badge">底座 · GameNN WM</span>
-        <h3>GameNN World Model</h3>
+        <h3>GameNN 世界模型</h3>
         <div class="p-sub">通用决策架构</div>
         <div class="p-desc">领域无关的通用决策底座。五模块可组合设计 + GumbelRouter。通过 GameNNConfig 配置策略/动作空间和维度，任意领域可用。952K 参数，~8MB 内存。</div>
         <div class="p-metrics">
@@ -866,7 +866,7 @@ footer a:hover{text-decoration:underline}
 <!-- ─── Footer ─── -->
 <footer>
   <p>玄幕安全团队 · <a href="https://github.com/guaidao2" target="_blank">@guaidao2</a> &nbsp;·&nbsp; MIT License</p>
-  <p style="margin-top:5px;font-size:.74rem;color:var(--text-300)">GameNN 架构演化 · July 2026</p>
+  <p style="margin-top:5px;font-size:.74rem;color:var(--text-300)">GameNN 架构演化 · 2026 年 7 月</p>
 </footer>
 
 <script>
