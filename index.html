@@ -694,6 +694,25 @@ footer a:hover{text-decoration:underline}
               <em>标志场景：</em>策略空间极大（如即时战略游戏、交易策略）。
             </span>
           </div>
+          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+            <strong style="color:var(--accent)">⑦ 扁平状态向量 → 图神经网络编码</strong><br>
+            <span style="font-size:.75rem;color:var(--text-200)">
+              当前 GameNN 将战场实体编码为扁平向量 [hp, ammo, x, y, facing, ...]，丢失了所有<strong>关系信息</strong>——
+              哪个坦克离我近、谁和谁在同一射线上、道具在谁脚底下。<br><br>
+              <em>替换方案：</em>StateEncoder 从 <code>Linear(20, 16)</code> 替换为 <strong>2-3 层 GCN/GAT</strong>：<br>
+              &nbsp;&nbsp;节点：每辆坦克 + 每个道具 + 关键地形块<br>
+              &nbsp;&nbsp;节点特征：hp、ammo、位置、朝向、类型<br>
+              &nbsp;&nbsp;边：距离&lt;3 连边、同一阵营连边、可见射击线连边<br>
+              &nbsp;&nbsp;边特征：距离、是否在射击线上<br><br>
+              影响范围仅替换 <code>StateEncoder</code> 一个模块，不影响 RNNStep、策略头、世界模型、Fuser 的设计。
+              本质上 GameNN 的"泛化状态"概念不变，只是状态从向量升级为拓扑图。<br><br>
+              这带来三个质变：<br>
+              <strong>(a) 空间关系显式化</strong>——GAT 的注意力机制自动知道"左边 3 格有队友，右边 2 格有敌人"，不再靠 MLP 自行猜测；<br>
+              <strong>(b) 世界模型从"猜向量"升级为"推演拓扑"</strong>——WorldModelStep 不再预测下一个 20 维向量，而是预测图结构如何演化（节点移动、边断开新增）；<br>
+              <strong>(c) 议会架构天然对齐</strong>——图注意力机制的消息传递本身就是多智能体通信，议会中每棵 GameNN 对应一个图节点，不需要额外设计通信协议。<br><br>
+              <em>标志场景：</em>多实体对抗（坦克混战、MOBA）、物理空间决策（自动驾驶、机器人协作）、任何关系结构起关键作用的场景。
+            </span>
+          </div>
         </div>
         <p style="margin-top:1rem;font-size:.8rem;color:var(--text-200);line-height:1.5">
           除了上述单模型进化路径，GameNN 在系统级架构层面存在两个极具潜力的方向：
