@@ -635,14 +635,13 @@ footer a:hover{text-decoration:underline}
       <div style="background:var(--bg-700);padding:1rem;border-radius:8px;border:1px solid var(--border);margin-top:1rem;">
         <strong style="color:var(--purple)">架构进化方向：何时需要换架构？</strong>
         <p style="font-size:.8rem;color:var(--text-200);margin-top:.3rem;line-height:1.5">
-          GameNN 的当前设计（GRU + 线性世界模型 + 简单 Fuser）在 <strong>50K-2M 参数</strong>范围内表现最优，
-          但超出舒适区后需要以下替换：
+          以下方向均来自 Tank Chess 实战验证中发现的能力天花板与改进空间：
         </p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.5rem">
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">① GRU → Transformer</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当需要长期记忆（&gt;50 步）或复杂状态关联时，GRU 的信息衰减成为瓶颈。<br>
+              自博弈实验发现 GameNN 约需 50 步才能收敛策略，更长期依赖（如整局 800 步）下 GRU 状态衰减明显。<br>
               <em>替换方案：</em>RNNDecisionStep 替换为 2-4 层 Causal Transformer，<br>
               参数量从 O(d²) 变为 O(4d²)，约 2-4 倍。<br>
               <em>标志场景：</em>围棋、全盘策略游戏、3A 剧情 NPC。
@@ -651,7 +650,7 @@ footer a:hover{text-decoration:underline}
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">② 线性世界模型 → 概率世界模型</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当前 WorldModelStep 是确定性线性投影，无法表达"可能发生什么"。<br>
+              Tank Chess 中同一局面下的胜负存在随机性（暴击、地形遮挡），但当前 WorldModelStep 只能输出确定预测。<br>
               <em>替换方案：</em>WorldModelStep 升级为 RSSM 风格的高斯随机模块<br>
               或小型 VAE，输出均值 + 方差。<br>
               <em>标志场景：</em>自动驾驶、金融风控、任何需要表达不确定性的场景。
@@ -660,7 +659,7 @@ footer a:hover{text-decoration:underline}
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">③ 单层 Fuser → 注意力 Fuser</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当前 Fuser 只做简单加法偏置，在多侧枝或多宿主场景下效率低。<br>
+              8 坦克混战中不同局面需要不同"注意力权重"——残血时应关注逃生路线，满血时应关注攻击目标。当前 Fuser 不能动态调整。<br>
               <em>替换方案：</em>可学习的注意力权重 Fuser，<br>
               自动选择哪个侧枝的输出在当前位置最相关。<br>
               <em>标志场景：</em>多智能体协作、多个辅助决策模块同时运作。
@@ -669,7 +668,7 @@ footer a:hover{text-decoration:underline}
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">④ 单智能体 → 通信协议栈</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当前每个 GameNN 实例独立决策，不与其他实例通信。<br>
+              森林实验表明 3 棵 GameNN 投票 92% 胜率，但每棵树互不知晓彼此的存在。如果树之间能共享态势认知，协同决策效果应更优。<br>
               <em>替换方案：</em>在 Fuser 之上添加一个额外的"通信头"<br>
               用于多智能体状态广播与协同策略协调。<br>
               <em>标志场景：</em>团队对抗、多机器人协作。
@@ -678,7 +677,7 @@ footer a:hover{text-decoration:underline}
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">⑤ 离线训练 → 在线学习循环</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当前训练方式为行为克隆 + 可选 PPO。在复杂环境中需要持续学习。<br>
+              自博弈军备竞赛实验发现纯监督学习（回放自己的历史）会导致策略固化。真正需要的是"赢的局被强化，输的局被惩罚"的在线机制。<br>
               <em>替换方案：</em>引入 Active Learning Loop：<br>
               低置信度时刻 → 请求人工干预 → 存入数据库 → 夜间重训练。<br>
               <em>标志场景：</em>WAF、入侵检测等需要持续适应新威胁的系统。
@@ -687,7 +686,7 @@ footer a:hover{text-decoration:underline}
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">⑥ 单个策略头 → 分层 MoE 策略组</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当前三个策略头（aggressive/balanced/defensive）是硬编码的。<br>
+              Tank Chess 中前期（资源争夺）、中期（火力压制）、后期（残局收割）需要截然不同的策略，但硬编码的三头策略难以覆盖极端情况。<br>
               <em>替换方案：</em>引入 MoE（Mixture of Experts），<br>
               每个 expert 是一个独立的策略子网络，动态路由。<br>
               这与 Game-nn 最初设计里的 TreeRouter 一致。<br>
@@ -698,8 +697,8 @@ footer a:hover{text-decoration:underline}
         <div style="background:var(--bg-800);padding:.8rem;border-radius:8px;border:1px solid var(--border);margin-top:.6rem">
             <strong style="color:var(--accent)">⑦ 扁平状态向量 → 图神经网络编码</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
-              当前 GameNN 将战场实体编码为扁平向量 [hp, ammo, x, y, facing, ...]，丢失了所有<strong>关系信息</strong>——
-              哪个坦克离我近、谁和谁在同一射线上、道具在谁脚底下。<br><br>
+              Tank Chess 的 20 维观测向量丢失了实体间的关系信息——某个坦克是敌人还是队友、道具在谁脚底下、谁挡在射击线上。
+              森林投票实验表明每棵树学到不同策略，但共享的是同一份"关系缺失"的状态。<br><br>
               <em>替换方案：</em>StateEncoder 从 <code>Linear(20, 16)</code> 替换为 <strong>2-3 层 GCN/GAT</strong>：<br>
               &nbsp;&nbsp;节点：每辆坦克 + 每个道具 + 关键地形块<br>
               &nbsp;&nbsp;节点特征：hp、ammo、位置、朝向、类型<br>
@@ -715,7 +714,8 @@ footer a:hover{text-decoration:underline}
             </span>
           </div>
         <p style="margin-top:1rem;font-size:.8rem;color:var(--text-200);line-height:1.5">
-          除了上述单模型进化路径，GameNN 在系统级架构层面存在两个极具潜力的方向：
+          除了上述单模型层面的演进方向（均来自 Tank Chess 对比实验中发现的能力天花板），
+          GameNN 在系统级架构层面存在两个更具潜力的集体智能方向：
         </p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.5rem">
           <div style="background:linear-gradient(135deg,rgba(255,170,0,.1),rgba(255,170,0,.02));padding:1rem;border-radius:8px;border:1px solid rgba(255,170,0,.3)">
