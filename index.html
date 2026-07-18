@@ -638,7 +638,7 @@ footer a:hover{text-decoration:underline}
           GameNN 的当前设计（GRU + 线性世界模型 + 简单 Fuser）在 <strong>50K-2M 参数</strong>范围内表现最优，
           但超出舒适区后需要以下替换：
         </p>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.6rem;margin-top:.5rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.5rem">
           <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
             <strong style="color:var(--accent)">① GRU → Transformer</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
@@ -694,7 +694,8 @@ footer a:hover{text-decoration:underline}
               <em>标志场景：</em>策略空间极大（如即时战略游戏、交易策略）。
             </span>
           </div>
-          <div style="background:var(--bg-800);padding:.6rem;border-radius:6px;">
+        </div>
+        <div style="background:var(--bg-800);padding:.8rem;border-radius:8px;border:1px solid var(--border);margin-top:.6rem">
             <strong style="color:var(--accent)">⑦ 扁平状态向量 → 图神经网络编码</strong><br>
             <span style="font-size:.75rem;color:var(--text-200)">
               当前 GameNN 将战场实体编码为扁平向量 [hp, ammo, x, y, facing, ...]，丢失了所有<strong>关系信息</strong>——
@@ -713,7 +714,6 @@ footer a:hover{text-decoration:underline}
               <em>标志场景：</em>多实体对抗（坦克混战、MOBA）、物理空间决策（自动驾驶、机器人协作）、任何关系结构起关键作用的场景。
             </span>
           </div>
-        </div>
         <p style="margin-top:1rem;font-size:.8rem;color:var(--text-200);line-height:1.5">
           除了上述单模型进化路径，GameNN 在系统级架构层面存在两个极具潜力的方向：
         </p>
