@@ -920,40 +920,28 @@ footer a:hover{text-decoration:underline}
           <th><span class="cmp-tag c5">GrowingLLM</span></th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td>参数量</td><td>~50K</td><td>64M + ~50K</td><td>~952K</td><td>64M + ~952K</td><td>~65K</td><td class="cmp-hl">12.7M</td></tr>
-        <tr>
+      <tbody><td>参数量</td><td>~50K</td><td>64M + ~50K</td><td>~952K</td><td>64M + ~952K</td><td>~65K</td><td class="cmp-hl">12.7M</td></tr>
           <td>输入</td>
           <td>164 维网络状态</td>
           <td>自然语言<span style="display:block;font-size:.7rem;color:var(--text-300)">MiniMind 编码</span></td>
           <td>任意向量 [D]<span style="display:block;font-size:.7rem;color:var(--text-300)">可配置</span></td>
           <td>MiniMind 隐状态 [768]</td>
           <td>32 维手工特征</td>
-        </tr>
-        <tr><td>状态维度</td><td>—</td><td>16</td><td>16（可配置）</td><td>16 / 64</td><td>64</td></tr>
-        <tr>
+        </tr><td>状态维度</td><td>—</td><td>16</td><td>16（可配置）</td><td>16 / 64</td><td>64</td><td class="cmp-hl">384</td></tr>
           <td>世界模型</td>
           <td class="cmp-good">RSSM（GRU+prior/posterior）</td>
           <td class="cmp-mid">单步 MLP</td>
           <td class="cmp-mid">单步 MLP</td>
           <td class="cmp-mid">单步 MLP</td>
           <td class="cmp-mid">单步 MLP</td>
-        </tr>
-        <tr><td>动作空间</td><td>8（攻/防各4）</td><td>8（安全动作）</td><td>8（可配置）</td><td>8（安全动作）</td><td>3（ALLOW/MONITOR/BLOCK）</td><td class="cmp-hl">~11K</td></tr>
-        <tr><td>策略空间</td><td>3</td><td>3</td><td>3（可配置）</td><td>3</td><td>3</td></tr>
-        <tr>
+        </tr><td>动作空间</td><td>8（攻/防各4）</td><td>8（安全动作）</td><td>8（可配置）</td><td>8（安全动作）</td><td>3（ALLOW/MONITOR/BLOCK）</td><td class="cmp-hl">~11K</td></tr><td>策略空间</td><td>3</td><td>3</td><td>3（可配置）</td><td>3</td><td>3</td><td class="cmp-hl">自回归</td></tr>
           <td>训练算法</td>
           <td class="cmp-good">PPO + Self-Play + GAE</td>
           <td>SFT</td>
           <td>SFT</td>
           <td>SFT</td>
           <td class="cmp-good">增量主动学习</td>
-        </tr>
-        <tr><td>LLM 骨干</td><td>无</td><td>MiniMind 64M</td><td>无</td><td>MiniMind 64M</td><td>无</td><td class="cmp-hl">自己即LLM</td></tr>
-        <tr><td>推理硬件</td><td>CPU / GPU</td><td>GPU (8GB+)</td><td>CPU / GPU</td><td>GPU (8GB)</td><td class="cmp-good">CPU（单核）</td><td class="cmp-good">GPU/CPU</td></tr>
-        <tr><td>推理延迟</td><td>—</td><td>—</td><td>~0.3ms (CPU)</td><td>—</td><td class="cmp-good">&lt;50&mu;s（完整链路）</td><td>~50ms</td></tr>
-        <tr><td>部署形态</td><td>离线模拟</td><td>概念验证</td><td>可嵌入库</td><td>产品级</td><td class="cmp-good">产品级</td><td class="cmp-good">产品级</td><td class="cmp-good">产品级</td></tr>
-      </tbody>
+        </tr><td>LLM 骨干</td><td>无</td><td>MiniMind 64M</td><td>无</td><td>MiniMind 64M</td><td>无</td><td class="cmp-hl">自己即LLM</td></tr><td>推理硬件</td><td>CPU / GPU</td><td>GPU (8GB+)</td><td>CPU / GPU</td><td>GPU (8GB)</td><td class="cmp-good">CPU（单核）</td><td class="cmp-good">GPU/CPU</td></tr><td>推理延迟</td><td>—</td><td>—</td><td>~0.3ms (CPU)</td><td>—</td><td class="cmp-good">&lt;50&mu;s（完整链路）</td><td>~50ms</td></tr><td>部署形态</td><td>离线模拟</td><td>概念验证</td><td>可嵌入库</td><td>产品级</td><td class="cmp-good">产品级</td><td class="cmp-good">产品级</td></tbody>
     </table>
     </div>
 
