@@ -528,7 +528,7 @@ footer a:hover{text-decoration:underline}
       <div class="meta">
         <span class="authors">玄幕安全团队 — @guaidao2</span>
         <span>2026 年 7 月</span>
-        <span>5 代演化 · 4 个独立仓库</span>
+        <span>6 代演化 · 5 个独立仓库</span>
       </div>
       <p>
         <strong>摘要：</strong>本文系统梳理 GameNN 系列的完整演化路径与核心设计思想。
@@ -545,7 +545,7 @@ footer a:hover{text-decoration:underline}
         第四阶段由 MuLun-Mind 将 GameNN 作为侧枝决策模块嵌入语言模型，
         通过 ThinkFuser 零额外参数复用 lm_head.weight 将决策偏置注入 LM logits，
         仅在 &lt;think&gt; token 位置激活，计算量从 O(T) 降至 O(K)（K &lt;&lt; T）。
-        第五阶段 MuLun-Waf 彻底剥离 LLM 骨干，仅保留 65K 参数侧枝决策网络，
+        第六阶段 GrowingLLM 将 GameNN 的自适应生长与 MoE 路由拓展为通用语言智能体框架，12.7M 参数即可流畅中文对话，可根据数据难度自动扩展层数与参数规模。第五阶段 MuLun-Waf 彻底剥离 LLM 骨干，仅保留 65K 参数侧枝决策网络，
         以 33 条静态规则（L1）+ ML 模型（L2）+ 置信度门控（L3）级联检测架构，
         配合主动学习循环实现持续进化，CPU 单核推理延迟 &lt; 50μs。
       </p>
@@ -874,10 +874,27 @@ footer a:hover{text-decoration:underline}
           <span class="tl-date">MuLun-Waf（幕论·WAF）</span>
         </div>
         <h3>轻量智能 WAF</h3>
-        <p>彻底剥离 LLM 骨干，仅保留侧枝决策网络（65K 参数）。级联检测架构：33 条静态规则（L1, 1-5μs）→ 侧枝 ML 模型（L2, 10-30μs）→ 置信度门控（L3）。主动学习循环使模型持续进化，30 轮增量训练后从 BLOCK 准确率 32.5% 升至 100%。CPU 单核可部署。</p>
+        <p>彻底剥离 LLM 骨干，仅保留侧枝决策网络（65K 参数）。级联检测架构：33 条静态规则（L1, 1-5μs）→ 侧枝 ML 模型（L2, 10-30μs）→ 置信度门控（L3）。主动学习循环使模型持续进化，30+ 轮增量训练后从 BLOCK 准确率 32.5% 升至 100%。CPU 单核可部署。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/MuLun-Waf" target="_blank">查看仓库 →</a>
           <a href="https://github.com/guaidao2/MuLun-Waf/blob/master/DEPLOY.md" class="paper-link">部署指南</a>
+        
+      <!-- v6: GrowingLLM -->
+      <div class="tl-item">
+        <div class="tl-marker"><span>6</span></div>
+        <div class="tl-content">
+          <span class="tl-date">GrowingLLM — 自适应生长通用智能体</span>
+          <div class="tl-badges">
+            <span class="tl-badge" style="background:rgba(139,92,246,.15);color:#a78bfa">生长架构</span>
+            <span class="tl-badge" style="background:rgba(0,212,255,.15);color:#00d4ff">MoE + GLA</span>
+            <span class="tl-badge" style="background:rgba(34,212,123,.15);color:#22d47b">12.7M → ∞</span>
+          </div>
+        </div>
+        <h3>从GameNN MoE到自生长语言模型</h3>
+        <p>第六代将GameNN的MoE专家路由思想与GrowthEngine深度结合，诞生了首个可动态生长的通用语言模型。起始2层12.7M参数，根据数据难度自动触发层数增长(已验证2→4层)和词表扩展。MoE 4专家Top-1路由使每层等效容量为普通Transformer的4倍，12.7M即可实现流畅中文对话。GLA线性注意力支持O(1)推理，配合BitNet三元量化可压缩至推理体积&lt;10MB。在坦克棋策略博弈中发现的"自适应容量"范式，经GrowingLLM验证为通用智能体设计提供了完整方案。</p>
+        <div class="tl-links">
+          <a href="https://github.com/guaidao2/Growing-LLM" target="_blank">查看仓库 →</a>
+          <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="paper-link">论文</a>
         </div>
       </div>
     </div>
@@ -901,6 +918,7 @@ footer a:hover{text-decoration:underline}
           <th><span class="cmp-tag c2">GameNN WM</span></th>
           <th><span class="cmp-tag c3">MuLun-Mind</span></th>
           <th><span class="cmp-tag c4">MuLun-Waf</span></th>
+          <th><span class="cmp-tag c5">GrowingLLM</span></th>
         </tr>
       </thead>
       <tbody>
@@ -1069,7 +1087,7 @@ footer a:hover{text-decoration:underline}
         <span class="p-badge">产品 · MuLun-Waf</span>
         <h3>MuLun-Waf 幕论·WAF</h3>
         <div class="p-sub">独立智能 WAF</div>
-        <div class="p-desc">完全剥离 LLM，仅保留侧枝决策网络。33 条规则引擎 + ML 模型级联 + 置信度门控。主动学习循环，30 轮增量训练到达 100% 准确率。CPU 单核可部署。</div>
+        <div class="p-desc">完全剥离 LLM，仅保留侧枝决策网络。33 条规则引擎 + ML 模型级联 + 置信度门控。主动学习循环，30+ 轮增量训练到达 100% 准确率。CPU 单核可部署。</div>
         <div class="p-metrics">
           <span class="pm">参数: <strong>65K</strong></span>
           <span class="pm">延迟: <strong>&lt;50&mu;s</strong></span>
@@ -1097,8 +1115,8 @@ footer a:hover{text-decoration:underline}
       <div class="m-card"><div class="mv">~50&mu;s</div><div class="ml">MuLun-Waf 端到端推理延迟</div></div>
       <div class="m-card"><div class="mv">0.44</div><div class="ml">MuLun-State16 置信度价差</div></div>
       <div class="m-card"><div class="mv">65.5M</div><div class="ml">MuLun-Mind 总参数量</div></div>
-      <div class="m-card"><div class="mv">30 轮</div><div class="ml">MuLun-Waf 增量 → 100%</div></div>
-      <div class="m-card"><div class="mv">264 KB</div><div class="ml">MuLun-Waf 权重体积</div></div>
+      <div class="m-card"><div class="mv">30+ 轮</div><div class="ml">MuLun-Waf 增量 → 100%</div></div>
+      <div class="m-card"><div class="mv">1.3 MB</div><div class="ml">MuLun-Waf 权重体积</div></div>
       <div class="m-card"><div class="mv">16</div><div class="ml">默认决策状态维度</div></div>
       <div class="m-card"><div class="mv">768</div><div class="ml">观测维度（GameNN 默认）</div></div>
     </div>
