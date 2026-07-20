@@ -230,7 +230,6 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .tl-item:nth-child(3)::before{background:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.25)}
 .tl-item:nth-child(4)::before{background:var(--orange);box-shadow:0 0 14px rgba(245,158,11,.25)}
 .tl-item:nth-child(5)::before{background:var(--green);box-shadow:0 0 14px rgba(34,212,123,.25)}
-.tl-item:nth-child(6)::before{background:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.35)}
 .tl-meta{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
 .tl-tag{
   display:inline-block;padding:2px 10px;border-radius:100px;
@@ -240,8 +239,7 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .tl-item:nth-child(2) .tl-tag{background:rgba(74,125,255,.1);color:var(--blue)}
 .tl-item:nth-child(3) .tl-tag{background:rgba(139,92,246,.1);color:var(--purple)}
 .tl-item:nth-child(4) .tl-tag{background:rgba(245,158,11,.1);color:var(--orange)}
-.tl-item:nth-child(5) .tl-tag{background:rgba(34,212,123,.1);color:var(--green)}
-.tl-item:nth-child(6) .tl-tag{background:rgba(139,92,246,.1);color:var(--purple)}
+.tl-item:nth-child(6)::before{background:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.35)}.tl-item:nth-child(6) .tl-tag{background:rgba(139,92,246,.1);color:var(--purple)}.tl-item:nth-child(5) .tl-tag{background:rgba(34,212,123,.1);color:var(--green)}
 .tl-date{font-size:.74rem;color:var(--text-300);font-weight:500}
 .tl-item h3{font-size:1.2rem;font-weight:700;margin-bottom:4px}
 .tl-item p{color:var(--text-200);font-size:.85rem;max-width:700px;margin-bottom:10px;line-height:1.6}
@@ -283,8 +281,7 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .cmp-tag.c1{background:rgba(74,125,255,.08);color:var(--blue)}
 .cmp-tag.c2{background:rgba(139,92,246,.08);color:var(--purple)}
 .cmp-tag.c3{background:rgba(245,158,11,.08);color:var(--orange)}
-.cmp-tag.c4{background:rgba(34,212,123,.08);color:var(--green)}
-.cmp-tag.c5{background:rgba(139,92,246,.08);color:var(--purple)}
+.cmp-tag.c4{background:rgba(34,212,123,.08);color:var(--green)}.cmp-tag.c5{background:rgba(139,92,246,.08);color:var(--purple)}
 .cmp-good{color:var(--green)}
 .cmp-mid{color:var(--orange)}
 
@@ -360,10 +357,7 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 }
 .p-card:nth-child(1) .p-badge{background:rgba(0,212,255,.08);color:var(--cyan)}
 .p-card:nth-child(2) .p-badge{background:rgba(74,125,255,.08);color:var(--blue)}
-.p-card:nth-child(3) .p-badge{background:rgba(139,92,246,.08);color:var(--purple)}
-.p-card:nth-child(4) .p-badge{background:rgba(245,158,11,.08);color:var(--orange)}
-.p-card:nth-child(5) .p-badge{background:rgba(139,92,246,.12);color:#a78bfa}
-.p-card:nth-child(6) .p-badge{background:rgba(34,212,123,.08);color:var(--green)}
+.p-card:nth-child(4) .p-badge{background:rgba(245,158,11,.08);color:var(--orange)}.p-card:nth-child(5) .p-badge{background:rgba(139,92,246,.12);color:#a78bfa}.p-card:nth-child(6) .p-badge{background:rgba(34,212,123,.08);color:var(--green)}.p-card:nth-child(3) .p-badge{background:rgba(139,92,246,.08);color:var(--purple)}
 .p-card:nth-child(4) .p-badge{background:rgba(245,158,11,.08);color:var(--orange)}
 .p-card:nth-child(5) .p-badge{background:rgba(34,212,123,.08);color:var(--green)}
 .p-card h3{font-size:1.05rem;font-weight:700;margin-bottom:1px}
@@ -515,7 +509,7 @@ footer a:hover{text-decoration:underline}
     <div class="hero-stats">
       <div class="hero-stat"><div class="num">6</div><div class="label">架构代际</div></div>
       <div class="hero-stat"><div class="num">5</div><div class="label">独立仓库</div></div>
-      <div class="hero-stat"><div class="num">12.7M→∞</div><div class="label">参数跨度</div></div>
+      <div class="hero-stat"><div class="num">65K→65M</div><div class="label">参数跨度</div></div>
       <div class="hero-stat"><div class="num">~50&mu;s</div><div class="label">最低推理延迟</div></div>
       <div class="hero-stat"><div class="num">3h</div><div class="label">单卡训练</div></div>
     </div>
@@ -553,7 +547,7 @@ footer a:hover{text-decoration:underline}
         仅在 &lt;think&gt; token 位置激活，计算量从 O(T) 降至 O(K)（K &lt;&lt; T）。
         第五阶段 MuLun-Waf 彻底剥离 LLM 骨干，仅保留 65K 参数侧枝决策网络，
         以 33 条静态规则（L1）+ ML 模型（L2）+ 置信度门控（L3）级联检测架构，
-        配合主动学习循环实现持续进化，CPU 单核推理延迟 &lt; 50μs。第六阶段 GrowingLLM 将 GameNN 的自适应生长与 MoE 路由拓展为通用语言智能体框架，起始仅 12.7M 参数即可流畅中文对话——比最小开源模型少 40 倍参数，可根据数据难度自动扩展层数与参数规模，于坦克棋实验中完成了从决策到语言的通用智能体闭环验证。
+        配合主动学习循环实现持续进化，CPU 单核推理延迟 &lt; 50μs。
       </p>
       <p style="margin-top:.8rem">
         <strong>最新验证：</strong>在回合制策略游戏 Tank Chess（10x10 棋盘，8 坦克混战）中，
@@ -880,21 +874,22 @@ footer a:hover{text-decoration:underline}
           <span class="tl-date">MuLun-Waf（幕论·WAF）</span>
         </div>
         <h3>轻量智能 WAF</h3>
-        <p>彻底剥离 LLM 骨干，仅保留侧枝决策网络（65K 参数）。级联检测架构：33 条静态规则（L1, 1-5μs）→ 侧枝 ML 模型（L2, 10-30μs）→ 置信度门控（L3）。主动学习循环使模型持续进化，30+ 轮增量训练后从 BLOCK 准确率 32.5% 升至 100%。CPU 单核可部署。</p>
+        <p>彻底剥离 LLM 骨干，仅保留侧枝决策网络（65K 参数）。级联检测架构：33 条静态规则（L1, 1-5μs）→ 侧枝 ML 模型（L2, 10-30μs）→ 置信度门控（L3）。主动学习循环使模型持续进化，30 轮增量训练后从 BLOCK 准确率 32.5% 升至 100%。CPU 单核可部署。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/MuLun-Waf" target="_blank">查看仓库 →</a>
           <a href="https://github.com/guaidao2/MuLun-Waf/blob/master/DEPLOY.md" class="paper-link">部署指南</a>
         </div>
       </div>
-      
-      <!-- v6: GrowingLLM -->
+    </div>
+  </div>
+
       <div class="tl-item">
         <div class="tl-meta">
-          <span class="tl-tag">v6 · 自生长</span>
+          <span class="tl-tag">自生长</span>
           <span class="tl-date">GrowingLLM — 自适应生长通用智能体</span>
         </div>
         <h3>从GameNN到自生长语言模型</h3>
-        <p>第六代将GameNN的MoE专家路由与GrowthEngine深度结合，诞生了首个可动态生长的通用语言模型。起始2层12.7M参数，根据数据难度自动触发层数增长（已验证2→4层）和词表扩展。MoE 4专家Top-1路由使每层等效容量为普通Transformer的4倍，12.7M即可实现流畅中文对话——比最小可用开源模型（Qwen-0.5B）少40倍参数。GLA线性注意力支持O(1)推理，配合BitNet三元量化可压缩至推理体积&lt;10MB。在坦克棋策略博弈中发现的"自适应容量"范式，经GrowingLLM完成为通用智能体的闭环验证。</p>
+        <p>第六代将GameNN的MoE专家路由与GrowthEngine深度结合，诞生了首个可动态生长的通用语言模型。起始2层12.7M参数，根据数据难度自动触发4层增长和词表扩展。MoE 4专家Top-1路由使每层等效容量为普通Transformer的4倍，12.7M即可实现流畅中文对话。GLA线性注意力配合BitNet三元量化可压缩至推理体积&lt;10MB。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/Growing-LLM" target="_blank">查看仓库 →</a>
           <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="paper-link">论文</a>
@@ -908,7 +903,7 @@ footer a:hover{text-decoration:underline}
 <section class="compare-section anchored" id="compare">
   <div class="container">
     <div class="section-label"><span class="accent"></span>版本对比</div>
-    <h2 class="section-title">五个版本，一脉相承</h2>
+    <h2 class="section-title">六个版本，一脉相承</h2>
     <p class="section-sub">核心回路始终一致，输入输出层随领域变化。参数量跨度从 65K 到 65.5M，覆盖从嵌入式设备到 GPU 集群的部署场景。</p>
 
     <div class="cmp-wrap">
@@ -926,21 +921,91 @@ footer a:hover{text-decoration:underline}
       </thead>
       <tbody>
         <tr><td>参数量</td><td>~50K</td><td>64M + ~50K</td><td>~952K</td><td>64M + ~952K</td><td>~65K</td><td class="cmp-hl">12.7M</td></tr>
-        <tr><td>输入维度</td><td>164 维网络状态</td><td>自然语言 (MiniMind编码)</td><td>任意向量 [D] (可配置)</td><td>MiniMind 隐状态 [768]</td><td>32 维手工特征</td><td class="cmp-hl">自然语言 (BPE)</td></tr>
-        <tr><td>状态维度</td><td>—</td><td>16</td><td>16 (可配置)</td><td>16 / 64</td><td>64</td><td class="cmp-hl">384</td></tr>
-        <tr><td>世界模型</td><td class="cmp-good">RSSM (GRU+prior/posterior)</td><td class="cmp-mid">单步 MLP</td><td class="cmp-mid">单步 MLP</td><td class="cmp-mid">单步 MLP</td><td class="cmp-mid">单步 MLP</td><td class="cmp-good">GLA RNN</td></tr>
-        <tr><td>动作空间</td><td>8 (攻/防各4)</td><td>8 (安全动作)</td><td>8 (可配置)</td><td>8 (安全动作)</td><td>3 (ALLOW/MONITOR/BLOCK)</td><td class="cmp-hl">~11K</td></tr>
-        <tr><td>策略空间</td><td>3</td><td>3</td><td>3 (可配置)</td><td>3</td><td>3</td><td class="cmp-hl">自回归</td></tr>
-        <tr><td>训练算法</td><td class="cmp-good">PPO + Self-Play + GAE</td><td>SFT</td><td>SFT</td><td>SFT</td><td class="cmp-good">增量主动学习</td><td class="cmp-good">自监督+生长</td></tr>
+        <tr>
+          <td>输入</td>
+          <td>164 维网络状态</td>
+          <td>自然语言<span style="display:block;font-size:.7rem;color:var(--text-300)">MiniMind 编码</span></td>
+          <td>任意向量 [D]<span style="display:block;font-size:.7rem;color:var(--text-300)">可配置</span></td>
+          <td>MiniMind 隐状态 [768]</td>
+          <td>32 维手工特征</td>
+        </tr>
+        <tr><td>状态维度</td><td>—</td><td>16</td><td>16（可配置）</td><td>16 / 64</td><td>64</td></tr>
+        <tr>
+          <td>世界模型</td>
+          <td class="cmp-good">RSSM（GRU+prior/posterior）</td>
+          <td class="cmp-mid">单步 MLP</td>
+          <td class="cmp-mid">单步 MLP</td>
+          <td class="cmp-mid">单步 MLP</td>
+          <td class="cmp-mid">单步 MLP</td>
+        </tr>
+        <tr><td>动作空间</td><td>8（攻/防各4）</td><td>8（安全动作）</td><td>8（可配置）</td><td>8（安全动作）</td><td>3（ALLOW/MONITOR/BLOCK）</td><td class="cmp-hl">~11K</td></tr>
+        <tr><td>策略空间</td><td>3</td><td>3</td><td>3（可配置）</td><td>3</td><td>3</td></tr>
+        <tr>
+          <td>训练算法</td>
+          <td class="cmp-good">PPO + Self-Play + GAE</td>
+          <td>SFT</td>
+          <td>SFT</td>
+          <td>SFT</td>
+          <td class="cmp-good">增量主动学习</td>
+        </tr>
         <tr><td>LLM 骨干</td><td>无</td><td>MiniMind 64M</td><td>无</td><td>MiniMind 64M</td><td>无</td><td class="cmp-hl">自己即LLM</td></tr>
-        <tr><td>推理硬件</td><td>CPU / GPU</td><td>GPU (8GB+)</td><td>CPU / GPU</td><td>GPU (8GB)</td><td class="cmp-good">CPU (单核)</td><td class="cmp-good">GPU/CPU</td></tr>
-        <tr><td>推理延迟</td><td>—</td><td>—</td><td>~0.3ms (CPU)</td><td>—</td><td class="cmp-good">&lt;50μs (完整链路)</td><td>~50ms</td></tr>
-        <tr><td>部署形态</td><td>离线模拟</td><td>概念验证</td><td>可嵌入库</td><td>产品级</td><td class="cmp-good">产品级</td><td class="cmp-good">产品级</td></tr>
+        <tr><td>推理硬件</td><td>CPU / GPU</td><td>GPU (8GB+)</td><td>CPU / GPU</td><td>GPU (8GB)</td><td class="cmp-good">CPU（单核）</td><td class="cmp-good">GPU/CPU</td></tr>
+        <tr><td>推理延迟</td><td>—</td><td>—</td><td>~0.3ms (CPU)</td><td>—</td><td class="cmp-good">&lt;50&mu;s（完整链路）</td><td>~50ms</td></tr>
+        <tr><td>部署形态</td><td>离线模拟</td><td>概念验证</td><td>可嵌入库</td><td>产品级</td><td class="cmp-good">产品级</td></tr>
       </tbody>
-</table>
+    </table>
+    </div>
+
+    <div class="paper-refs">
+      <a href="https://github.com/guaidao2/Game-nn-O/blob/master/PAPER_CN.md" class="paper-ref" target="_blank">
+        <span class="pr-num">01</span>
+        <div><div class="pr-title">Game-nn-O 架构论文</div><div class="pr-desc">双路径决策架构 · 中/EN</div></div>
+      </a>
+      <a href="https://github.com/guaidao2/GameNN-WorldModel/blob/master/PAPER_EN.md" class="paper-ref" target="_blank">
+        <span class="pr-num">02</span>
+        <div><div class="pr-title">GameNN 世界模型 论文</div><div class="pr-desc">通用递归博弈决策架构 · EN</div></div>
+      </a>
+      <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER_CN.md" class="paper-ref" target="_blank">
+        <span class="pr-num">03</span>
+        <div><div class="pr-title">MuLun 侧枝决策论文</div><div class="pr-desc">语言引导博弈推理</div></div>
+      </a>
+      <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="paper-ref" target="_blank">
+        <span class="pr-num">04</span>
+        <div><div class="pr-title">GrowingLLM 自生长论文</div><div class="pr-desc">动态生长通用智能体</div></div><div class="pr-desc">语言引导博弈推理 · 中/EN</div></div>
+      </a>
     </div>
   </div>
 </section>
+
+<!-- ─── Architecture Core ─── -->
+<section class="arch-section anchored" id="architecture">
+  <div class="container">
+    <div class="section-label"><span class="accent"></span>核心架构</div>
+    <h2 class="section-title">贯穿所有版本的统一神经回路</h2>
+    <p class="section-sub">从 simulator 的 164 维网络状态到 WAF 的 32 维特征，核心回路始终保持一致。输入输出层随领域变化，推理内核不动。</p>
+
+    <div class="arch-flow">
+      <div class="arch-node">Input<br><span class="sub">any [D]</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">StateEncoder<br><span class="sub">VAE 双头</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node core">Structured State<br><span class="sub">[0,1]<sup>d</sup></span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">RNN Step<br><span class="sub">GRU 门控</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">ActionValue<br><span class="sub">策略 · 动作 · 价值</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">世界模型<br><span class="sub">一步预测</span></div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node">Output<br><span class="sub">决策 / 偏置</span></div>
+    </div>
+
+    <div class="arch-note">
+      <strong>关键洞察：</strong>MuLun-Waf 将输入从 768 维 LLM 隐状态替换为 32 维 WAF 特征后，核心回路不需要改一行代码。StateEncoder 负责适配，RSSM 核心负责推理。
+    </div>
+  </div>
+</section>
+
 <!-- ─── Projects ─── -->
 <section class="projects-section anchored" id="projects">
   <div class="container">
@@ -1024,10 +1089,10 @@ footer a:hover{text-decoration:underline}
         <span class="p-badge" style="background:rgba(139,92,246,.12);color:#a78bfa">自生长 · v6</span>
         <h3>GrowingLLM 自适应通用智能体</h3>
         <div class="p-sub">GameNN MoE → 自生长 LLM</div>
-        <div class="p-desc">首个可动态生长的语言模型。2层12.7M参数起步，MoE 4专家 + GLA线性注意力 + GrowthEngine自动生长。12.7M即流畅中文对话，比最小开源模型少40倍参数。BitNet三元量化后可＜10MB推理。</div>
+        <div class="p-desc">2层12.7M起步，MoE 4专家 + GLA注意力 + 自动生长。12.7M流畅中文对话。</div>
         <div class="p-metrics">
           <span class="pm">起始: <strong>12.7M</strong></span>
-          <span class="pm">生长: <strong>2→4层自动</strong></span>
+          <span class="pm">生长: <strong>2→4层</strong></span>
           <span class="pm">三元: <strong>＜10MB</strong></span>
         </div>
         <div class="p-links">
@@ -1041,7 +1106,7 @@ footer a:hover{text-decoration:underline}
         <span class="p-badge">产品 · MuLun-Waf</span>
         <h3>MuLun-Waf 幕论·WAF</h3>
         <div class="p-sub">独立智能 WAF</div>
-        <div class="p-desc">完全剥离 LLM，仅保留侧枝决策网络。33 条规则引擎 + ML 模型级联 + 置信度门控。主动学习循环，30+ 轮增量训练到达 100% 准确率。CPU 单核可部署。</div>
+        <div class="p-desc">完全剥离 LLM，仅保留侧枝决策网络。33 条规则引擎 + ML 模型级联 + 置信度门控。主动学习循环，30 轮增量训练到达 100% 准确率。CPU 单核可部署。</div>
         <div class="p-metrics">
           <span class="pm">参数: <strong>65K</strong></span>
           <span class="pm">延迟: <strong>&lt;50&mu;s</strong></span>
@@ -1069,10 +1134,10 @@ footer a:hover{text-decoration:underline}
       <div class="m-card"><div class="mv">~50&mu;s</div><div class="ml">MuLun-Waf 端到端推理延迟</div></div>
       <div class="m-card"><div class="mv">0.44</div><div class="ml">MuLun-State16 置信度价差</div></div>
       <div class="m-card"><div class="mv">65.5M</div><div class="ml">MuLun-Mind 总参数量</div></div>
-      <div class="m-card"><div class="mv">30+ 轮</div><div class="ml">MuLun-Waf 增量 → 100%</div></div>
+      <div class="m-card"><div class="mv">30 轮</div><div class="ml">MuLun-Waf 增量 → 100%</div></div>
+      <div class="m-card"><div class="mv">264 KB</div><div class="ml">MuLun-Waf 权重体积</div></div>
       <div class="m-card"><div class="mv">12.7M</div><div class="ml">GrowingLLM 初始参数量</div></div>
       <div class="m-card"><div class="mv">2→4 层</div><div class="ml">GrowingLLM 自动生长</div></div>
-      <div class="m-card"><div class="mv">1.3 MB</div><div class="ml">MuLun-Waf 权重体积</div></div>
       <div class="m-card"><div class="mv">16</div><div class="ml">默认决策状态维度</div></div>
       <div class="m-card"><div class="mv">768</div><div class="ml">观测维度（GameNN 默认）</div></div>
     </div>
