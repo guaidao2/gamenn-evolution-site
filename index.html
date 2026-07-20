@@ -230,6 +230,7 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .tl-item:nth-child(3)::before{background:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.25)}
 .tl-item:nth-child(4)::before{background:var(--orange);box-shadow:0 0 14px rgba(245,158,11,.25)}
 .tl-item:nth-child(5)::before{background:var(--green);box-shadow:0 0 14px rgba(34,212,123,.25)}
+.tl-item:nth-child(6)::before{background:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.35)}
 .tl-meta{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
 .tl-tag{
   display:inline-block;padding:2px 10px;border-radius:100px;
@@ -240,6 +241,7 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .tl-item:nth-child(3) .tl-tag{background:rgba(139,92,246,.1);color:var(--purple)}
 .tl-item:nth-child(4) .tl-tag{background:rgba(245,158,11,.1);color:var(--orange)}
 .tl-item:nth-child(5) .tl-tag{background:rgba(34,212,123,.1);color:var(--green)}
+.tl-item:nth-child(6) .tl-tag{background:rgba(139,92,246,.1);color:var(--purple)}
 .tl-date{font-size:.74rem;color:var(--text-300);font-weight:500}
 .tl-item h3{font-size:1.2rem;font-weight:700;margin-bottom:4px}
 .tl-item p{color:var(--text-200);font-size:.85rem;max-width:700px;margin-bottom:10px;line-height:1.6}
@@ -282,6 +284,7 @@ section{position:relative;z-index:2;padding:5rem 2rem}
 .cmp-tag.c2{background:rgba(139,92,246,.08);color:var(--purple)}
 .cmp-tag.c3{background:rgba(245,158,11,.08);color:var(--orange)}
 .cmp-tag.c4{background:rgba(34,212,123,.08);color:var(--green)}
+.cmp-tag.c5{background:rgba(139,92,246,.08);color:var(--purple)}
 .cmp-good{color:var(--green)}
 .cmp-mid{color:var(--orange)}
 
@@ -884,17 +887,12 @@ footer a:hover{text-decoration:underline}
       
       <!-- v6: GrowingLLM -->
       <div class="tl-item">
-        <div class="tl-marker"><span>6</span></div>
-        <div class="tl-content">
+        <div class="tl-meta">
+          <span class="tl-tag">v6 · 自生长</span>
           <span class="tl-date">GrowingLLM — 自适应生长通用智能体</span>
-          <div class="tl-badges">
-            <span class="tl-badge" style="background:rgba(139,92,246,.15);color:#a78bfa">生长架构</span>
-            <span class="tl-badge" style="background:rgba(0,212,255,.15);color:#00d4ff">MoE + GLA</span>
-            <span class="tl-badge" style="background:rgba(34,212,123,.15);color:#22d47b">12.7M → ∞</span>
-          </div>
         </div>
-        <h3>从GameNN MoE到自生长语言模型</h3>
-        <p>第六代将GameNN的MoE专家路由思想与GrowthEngine深度结合，诞生了首个可动态生长的通用语言模型。起始2层12.7M参数，根据数据难度自动触发层数增长(已验证2→4层)和词表扩展。MoE 4专家Top-1路由使每层等效容量为普通Transformer的4倍，12.7M即可实现流畅中文对话。GLA线性注意力支持O(1)推理，配合BitNet三元量化可压缩至推理体积&lt;10MB。在坦克棋策略博弈中发现的"自适应容量"范式，经GrowingLLM验证为通用智能体设计提供了完整方案。</p>
+        <h3>从GameNN到自生长语言模型</h3>
+        <p>第六代将GameNN的MoE专家路由与GrowthEngine深度结合，诞生了首个可动态生长的通用语言模型。起始2层12.7M参数，根据数据难度自动触发层数增长（已验证2→4层）和词表扩展。MoE 4专家Top-1路由使每层等效容量为普通Transformer的4倍，12.7M即可实现流畅中文对话——比最小可用开源模型（Qwen-0.5B）少40倍参数。GLA线性注意力支持O(1)推理，配合BitNet三元量化可压缩至推理体积&lt;10MB。在坦克棋策略博弈中发现的"自适应容量"范式，经GrowingLLM完成为通用智能体的闭环验证。</p>
         <div class="tl-links">
           <a href="https://github.com/guaidao2/Growing-LLM" target="_blank">查看仓库 →</a>
           <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="paper-link">论文</a>
@@ -972,7 +970,11 @@ footer a:hover{text-decoration:underline}
       </a>
       <a href="https://github.com/guaidao2/MuLun-Mind/blob/master/PAPER_CN.md" class="paper-ref" target="_blank">
         <span class="pr-num">03</span>
-        <div><div class="pr-title">MuLun 侧枝决策论文</div><div class="pr-desc">语言引导博弈推理 · 中/EN</div></div>
+        <div><div class="pr-title">MuLun 侧枝决策论文</div></div></div>
+      </a>
+      <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="paper-ref" target="_blank">
+        <span class="pr-num">04</span>
+        <div><div class="pr-title">GrowingLLM 自生长论文</div><div class="pr-desc">语言引导博弈推理 · 中/EN</div></div>
       </a>
     </div>
   </div>
@@ -1087,6 +1089,23 @@ footer a:hover{text-decoration:underline}
 
       <div class="p-card">
         <div class="bg-glow"></div>
+        <span class="p-badge" style="background:rgba(139,92,246,.12);color:#a78bfa">自生长 · v6</span>
+        <h3>GrowingLLM 自适应通用智能体</h3>
+        <div class="p-sub">GameNN MoE → 自生长 LLM</div>
+        <div class="p-desc">首个可动态生长的语言模型。2层12.7M参数起步，MoE 4专家 + GLA线性注意力 + GrowthEngine自动生长。12.7M即流畅中文对话，比最小开源模型少40倍参数。BitNet三元量化后可＜10MB推理。</div>
+        <div class="p-metrics">
+          <span class="pm">起始: <strong>12.7M</strong></span>
+          <span class="pm">生长: <strong>2→4层自动</strong></span>
+          <span class="pm">三元: <strong>＜10MB</strong></span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/guaidao2/Growing-LLM" class="pri" target="_blank">查看仓库</a>
+          <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="sec" target="_blank">论文</a>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="bg-glow"></div>
         <span class="p-badge">产品 · MuLun-Waf</span>
         <h3>MuLun-Waf 幕论·WAF</h3>
         <div class="p-sub">独立智能 WAF</div>
@@ -1119,6 +1138,8 @@ footer a:hover{text-decoration:underline}
       <div class="m-card"><div class="mv">0.44</div><div class="ml">MuLun-State16 置信度价差</div></div>
       <div class="m-card"><div class="mv">65.5M</div><div class="ml">MuLun-Mind 总参数量</div></div>
       <div class="m-card"><div class="mv">30+ 轮</div><div class="ml">MuLun-Waf 增量 → 100%</div></div>
+      <div class="m-card"><div class="mv">12.7M</div><div class="ml">GrowingLLM 初始参数量</div></div>
+      <div class="m-card"><div class="mv">2→4 层</div><div class="ml">GrowingLLM 自动生长</div></div>
       <div class="m-card"><div class="mv">1.3 MB</div><div class="ml">MuLun-Waf 权重体积</div></div>
       <div class="m-card"><div class="mv">16</div><div class="ml">默认决策状态维度</div></div>
       <div class="m-card"><div class="mv">768</div><div class="ml">观测维度（GameNN 默认）</div></div>
