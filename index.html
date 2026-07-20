@@ -550,7 +550,7 @@ footer a:hover{text-decoration:underline}
         仅在 &lt;think&gt; token 位置激活，计算量从 O(T) 降至 O(K)（K &lt;&lt; T）。
         第五阶段 MuLun-Waf 彻底剥离 LLM 骨干，仅保留 65K 参数侧枝决策网络，
         以 33 条静态规则（L1）+ ML 模型（L2）+ 置信度门控（L3）级联检测架构，
-        配合主动学习循环实现持续进化，CPU 单核推理延迟 &lt; 50μs。
+        配合主动学习循环实现持续进化，CPU 单核推理延迟 &lt; 50μs。第六阶段 GrowingLLM 将 GameNN 的自适应生长与 MoE 路由拓展为通用语言智能体框架，起始仅 12.7M 参数即可流畅中文对话——比最小开源模型少 40 倍参数，可根据数据难度自动扩展层数与参数规模，于坦克棋实验中完成了从决策到语言的通用智能体闭环验证。
       </p>
       <p style="margin-top:.8rem">
         <strong>最新验证：</strong>在回合制策略游戏 Tank Chess（10x10 棋盘，8 坦克混战）中，
