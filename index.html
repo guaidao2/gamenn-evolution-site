@@ -548,7 +548,7 @@ footer a:hover{text-decoration:underline}
         第四阶段由 MuLun-Mind 将 GameNN 作为侧枝决策模块嵌入语言模型，
         通过 ThinkFuser 零额外参数复用 lm_head.weight 将决策偏置注入 LM logits，
         仅在 &lt;think&gt; token 位置激活，计算量从 O(T) 降至 O(K)（K &lt;&lt; T）。
-        第六阶段 GrowingLLM 将 GameNN 的自适应生长与 MoE 路由拓展为通用语言智能体框架，12.7M 参数即可流畅中文对话，可根据数据难度自动扩展层数与参数规模。第五阶段 MuLun-Waf 彻底剥离 LLM 骨干，仅保留 65K 参数侧枝决策网络，
+        第五阶段 MuLun-Waf 彻底剥离 LLM 骨干，仅保留 65K 参数侧枝决策网络，
         以 33 条静态规则（L1）+ ML 模型（L2）+ 置信度门控（L3）级联检测架构，
         配合主动学习循环实现持续进化，CPU 单核推理延迟 &lt; 50μs。
       </p>
@@ -974,7 +974,7 @@ footer a:hover{text-decoration:underline}
       </a>
       <a href="https://github.com/guaidao2/Growing-LLM/blob/master/PAPER.md" class="paper-ref" target="_blank">
         <span class="pr-num">04</span>
-        <div><div class="pr-title">GrowingLLM 自生长论文</div><div class="pr-desc">语言引导博弈推理 · 中/EN</div></div>
+        <div><div class="pr-title">GrowingLLM 自生长论文</div><div class="pr-desc">动态生长通用智能体 · 中/EN</div></div>
       </a>
     </div>
   </div>
